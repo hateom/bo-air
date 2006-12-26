@@ -15,7 +15,59 @@
   <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget" />
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>9</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item row="0" column="0" >
+     <widget class="QGroupBox" name="groupBox_2" >
+      <property name="title" >
+       <string>Input field</string>
+      </property>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QTextEdit" name="textEdit" />
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1" >
+     <widget class="QGroupBox" name="groupBox_3" >
+      <property name="title" >
+       <string>Processor output</string>
+      </property>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>9</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QTextEdit" name="textEdit_2" />
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="1" >
+     <widget class="QPushButton" name="pushButton" >
+      <property name="text" >
+       <string>Run processor</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar" >
    <property name="geometry" >
     <rect>

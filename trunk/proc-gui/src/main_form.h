@@ -11,6 +11,9 @@ public:
     pgMainForm();
     ~pgMainForm();
 
+public slots:
+    void on_process();
+
 private:
     Ui::MainWindow ui;
 };
