@@ -15,3 +15,4 @@ UI_DIR = src/ui
 HEADERS += src/main_form.h
 FORMS += src/ui/main_form.ui
 SOURCES += src/main_form.cpp src/pg_main.cpp
+
