@@ -10,5 +10,7 @@ INCLUDEPATH += . src
 OBJECTS_DIR = obj
 
 # Input
-HEADERS += src/p_parser.h src/p_output.h src/p_utils.h
-SOURCES += src/p_main.cpp src/p_parser.cpp src/p_output.cpp src/p_utils.cpp
+HEADERS += src/p_parser.h src/p_output.h src/p_utils.h src/p_building.h src/p_transmitter.h \
+           src/p_cost_mgr.h
+SOURCES += src/p_main.cpp src/p_parser.cpp src/p_output.cpp src/p_utils.cpp src/p_building.cpp \
+           src/p_transmitter.cpp src/p_cost_mgr.cpp
