@@ -11,6 +11,10 @@ public:
 
     virtual  int read_data( const char * filename );
     virtual void free();
+
+protected:
+    unsigned int  base_width;
+    bool first_run;
 };
 
 #endif // __P_MAP_LOADER_TXT_H__
