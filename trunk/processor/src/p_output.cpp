@@ -14,6 +14,8 @@ void pOutput::print( const char * str, ... )
     static char buffer[256] = "";
     va_list al;
 
+    if( silent ) return;
+
     va_start( al, str );
     vsprintf( buffer, str, al );
     va_end( al );
