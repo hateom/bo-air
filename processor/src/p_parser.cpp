@@ -22,7 +22,6 @@ bool pParser::process( const char * in_file )
 {
     FILE * file;
     char buffer[BUF_SIZE+1];
-    int r_size;
 
     file = fopen( in_file, "r" );
     if( !file ) 
@@ -33,7 +32,6 @@ bool pParser::process( const char * in_file )
     while( !feof( file ) )
     {
         fgets( buffer, BUF_SIZE, file );
-        //if( buffer[strlen(buffer)-1] == '\n' ) buffer[strlen(buffer)-1] = '\0';
         printf( "%s", buffer );
         buffer[0] = '\0';
     }
