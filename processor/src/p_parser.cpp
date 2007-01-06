@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "p_parser.h"
-
-#define BUF_SIZE 128
+#include "p_map_loader_txt.h"
 
 pParser * pParser::singleton()
 {
@@ -10,38 +9,64 @@ pParser * pParser::singleton()
     return( &static_object );
 }
 
-pParser::pParser()
+pParser::pParser() : loader( NULL )
 {
 }
 
 pParser::~pParser()
 {
+    release();
 }
 
-bool pParser::process( const char * in_file )
+bool pParser::process( const char * in_file, pMap * map )
 {
-    FILE * file;
-    char buffer[BUF_SIZE+1];
+    if( !map ) return( false );
 
-    file = fopen( in_file, "r" );
-    if( !file ) 
+    loader = new pMapLoaderTxt();
+    int item;
+
+    if( loader->read_data( in_file ) != 0 )
     {
         return( false );
     }
 
-    while( !feof( file ) )
+    for( unsigned int y=0; y<loader->get_height(); ++y )
     {
-        fgets( buffer, BUF_SIZE, file );
-        printf( "%s", buffer );
-        buffer[0] = '\0';
+        for( unsigned int x=0; x<loader->get_width(); ++x )
+        {
+            item = loader->get_data( x, y );
+            if( item == '+' )
+            {
+                map->buildings.push_back( new pBuilding( x, y, 1 ) );
+            }
+            if( item == ' ' )
+            {
+                map->transmitters.push_back( new pTransmitter( x, y, 0 ) );
+            }
+        }
     }
-
-    fclose( file );
 
     return( true );
 }
 
 void pParser::release()
 {
+    for( size_t i=0; i<buildings.size(); ++i )
+    {
+        delete buildings[i];
+    }
+    buildings.clear();
 
+    for( size_t i=0; i<transmitters.size(); ++i )
+    {
+        delete transmitters[i];
+    }
+    transmitters.clear();
+
+    if( loader != NULL )
+    {
+        loader->free();
+        delete loader;
+        loader = NULL;
+    }
 }

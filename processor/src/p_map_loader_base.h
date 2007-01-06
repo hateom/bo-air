@@ -1,6 +1,7 @@
 #ifndef __P_MAP_LOADER_BASE_H__
 #define __P_MAP_LOADER_BASE_H__
 
+#include <vector>
 #include "p_error.h"
 
 class pMapLoaderBase
@@ -17,8 +18,8 @@ public:
     inline int get_data( unsigned int x, unsigned int y ) const 
     { P_ASSERT( x < width && y < height, "arguments are out of range" ); return( data[x+y*width] ); }
 
-private:
-    int * data;
+protected:
+    std::vector<int> data;
     unsigned int width, height;
 };
 

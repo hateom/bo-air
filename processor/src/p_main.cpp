@@ -3,11 +3,13 @@
 #include "p_output.h"
 #include "p_utils.h"
 #include "p_parser.h"
+#include "p_map.h"
 
 int main( int argc, char * argv[] )
 {
     int file_in = 1;
     bool flag;
+    pMap map;
 
     if( argc == 3 && strcmp( argv[1], "-s" ) == 0 )
     {
@@ -34,7 +36,7 @@ int main( int argc, char * argv[] )
     }
 
     pOut->print( "%s>>>%s processing input file and generating output.\n", COL_BLU, COL_GRY );
-    flag = Parser->process( argv[file_in] );
+    flag = Parser->process( argv[file_in], &map );
     Parser->release();
 
     pOut->print( "\n%s>>> %sprocessing is finished [ %s%s%s ]\n", COL_BLU, COL_GRY, flag?COL_GRN:COL_RED, flag?"OK":"!!", COL_GRY );
