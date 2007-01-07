@@ -18,12 +18,10 @@ public:
     ~pParser();
 
     bool process( const char * in_file, pMap * map );
-    void release();
+    void release( pMap * map );
     
 private:
     pMapLoaderBase * loader;
-    std::vector<pBuilding*> buildings;
-    std::vector<pTransmitter*> transmitters;
 };
 
 #endif // __PPARSER_H__
