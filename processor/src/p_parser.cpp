@@ -2,6 +2,7 @@
 #include <string.h>
 #include "p_parser.h"
 #include "p_map_loader_txt.h"
+#include "p_output.h"
 
 pParser * pParser::singleton()
 {
@@ -15,7 +16,7 @@ pParser::pParser() : loader( NULL )
 
 pParser::~pParser()
 {
-    release();
+    release( NULL );
 }
 
 bool pParser::process( const char * in_file, pMap * map )
@@ -49,19 +50,22 @@ bool pParser::process( const char * in_file, pMap * map )
     return( true );
 }
 
-void pParser::release()
+void pParser::release( pMap * map )
 {
-    for( size_t i=0; i<buildings.size(); ++i )
+    if( map )
     {
-        delete buildings[i];
-    }
-    buildings.clear();
+        for( size_t i=0; i<map->buildings.size(); ++i )
+        {
+            delete map->buildings[i];
+        }
+        map->buildings.clear();
 
-    for( size_t i=0; i<transmitters.size(); ++i )
-    {
-        delete transmitters[i];
+        for( size_t i=0; i<map->transmitters.size(); ++i )
+        {
+            delete map->transmitters[i];
+        }
+        map->transmitters.clear();
     }
-    transmitters.clear();
 
     if( loader != NULL )
     {

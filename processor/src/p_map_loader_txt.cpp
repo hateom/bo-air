@@ -24,32 +24,32 @@ int pMapLoaderTxt::read_data( const char * filename )
         return( -1 );
     }
 
-    first_run = true;
+    height = 0;
 
     while( !file.eof() )
     {
         std::getline( file, line );
         if( !line.size() ) break;
-        pOut->print( "%s [%d]\n", line.c_str(), line.size() );
+        pOut->print( "%s [%s%d%s]\n", line.c_str(), COL_BLU, line.size(), COL_DEF );
         for( std::string::iterator it=line.begin(); it!=line.end(); ++it )
         {
             data.push_back( *it );
         }
 
-        if( first_run )
+        if( height == 0 )
         {
-            first_run = false;
-            base_width = line.size();
+            width = line.size();
         }
         else
         {
-            if( base_width != line.size() )
+            if( width != line.size() )
             {
                 file.close();
                 pOut->print( "%s!!!%s every line must have the same width!\n", COL_RED, COL_DEF );
                 return( -2 );
             }
         }
+        height++;
     }
 
     file.close();
