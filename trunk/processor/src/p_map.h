@@ -2,6 +2,8 @@
 #define __P_MAP_H__
 
 #include <vector>
+#include "p_building.h"
+#include "p_transmitter.h"
 
 class pMap
 {

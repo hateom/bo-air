@@ -1,10 +1,12 @@
 #ifndef __P_ERROR_H__
 #define __P_ERROR_H__
 
+#define P_DEBUG // temporary declaration -> should be moved to Makefile
+
 #ifdef P_DEBUG
-#define P_ASSERT( MSG, EXP ) if( !(EXP) ) { throw pException( MSG, #EXP, __FILE__, __LINE__ ); }
+#define P_ASSERT( EXP, MSG ) if( !(EXP) ) { throw pException( MSG, #EXP, __FILE__, __LINE__ ); }
 #else
-#define P_ASSERT( MSG, EXP )
+#define P_ASSERT( EXP, MSG )
 #endif
 
 #include <string>
