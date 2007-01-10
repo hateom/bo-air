@@ -7,12 +7,15 @@ class pTransmitter
 {
 public:
     pTransmitter();
+    pTransmitter( pTransmitter & rhs );
+    pTransmitter( pTransmitter * ptr );
+    pTransmitter( int type );
     pTransmitter( int x, int y, int type );
     ~pTransmitter();
 
     float get_cost() const;
     int   get_type() const;
-    int   get_range() const;
+    float get_range() const;
     int   get_x() const;
     int   get_y() const;
 
@@ -20,6 +23,8 @@ public:
     void  set_type( int type );
 
     int   in_range( pBuilding * building );
+
+    bool  equals( pTransmitter * t );
 
 protected:
     int x, y, type;

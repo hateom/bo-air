@@ -15,6 +15,8 @@ public:
     void set_population( int pop );
     void set_pos( int x, int y );
 
+    float profit();
+
 protected:
     int x, y, population;
 };

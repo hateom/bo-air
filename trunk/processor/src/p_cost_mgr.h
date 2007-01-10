@@ -7,6 +7,7 @@ namespace pCostMgr
 {
     float get_transmitter_cost( int type );
     float get_transmitter_range( int type );
+    float get_person_profit();
 };
 
 #endif // __P_COST_MGR_H__
