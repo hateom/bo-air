@@ -1,9 +1,29 @@
 #include "p_transmitter.h"
 #include "p_building.h"
+#include "p_cost_mgr.h"
+#include "p_error.h"
 
 #include <cmath>
 
 pTransmitter::pTransmitter()
+{
+}
+
+pTransmitter::pTransmitter( pTransmitter & rhs )
+{
+    x = rhs.x;
+    y = rhs.y;
+    type = rhs.type;
+}
+
+pTransmitter::pTransmitter( pTransmitter * ptr )
+{
+    x = ptr->x;
+    y = ptr->y;
+    type = ptr->type;
+}
+
+pTransmitter::pTransmitter( int ntype ) : type(ntype)
 {
 }
 
@@ -18,7 +38,7 @@ pTransmitter::~pTransmitter()
 
 float pTransmitter::get_cost() const
 {
-    return( 0.0f );
+    return( pCostMgr::get_transmitter_cost( get_type() ) );
 }
 
 int pTransmitter::get_type() const
@@ -26,9 +46,9 @@ int pTransmitter::get_type() const
     return( type );
 }
 
-int pTransmitter::get_range() const
+float pTransmitter::get_range() const
 {
-    return( 0 );
+    return( pCostMgr::get_transmitter_range( get_type() ) );
 }
 
 int pTransmitter::get_x() const
@@ -55,11 +75,19 @@ void pTransmitter::set_type( int ntype )
 
 int pTransmitter::in_range( pBuilding * b )
 {
+    if( !get_type() ) return( 0 );
+
     float dist = sqrtf( 
         (float)((x - b->get_x())*(x - b->get_x()) + 
                 (y - b->get_y())*(y - b->get_y()))
     );
 
     return( dist <= get_range() );
+}
+
+bool pTransmitter::equals( pTransmitter * t )
+{
+    P_ASSERT( t != NULL, "empty argument" );
+    return( type == t->type );
 }
 

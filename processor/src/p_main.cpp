@@ -4,12 +4,14 @@
 #include "p_utils.h"
 #include "p_parser.h"
 #include "p_map.h"
+#include "p_tabu_search.h"
 
 int main( int argc, char * argv[] )
 {
     int file_in = 1;
     bool flag;
     pMap map;
+    pTabuSearch tabu_s;
 
     if( argc == 3 && strcmp( argv[1], "-s" ) == 0 )
     {
@@ -36,12 +38,26 @@ int main( int argc, char * argv[] )
     }
 
     pOut->print( "%s>>>%s processing input file and generating output.\n", COL_BLU, COL_GRY );
-    flag = Parser->process( argv[file_in], &map );
-    pOut->print( "%s>>>%s loaded %d buildings and %d transmitter possible positions [ %sOK%s ]\n", COL_GRN, COL_DEF, map.buildings.size(), map.transmitters.size(), COL_GRN, COL_DEF );
-    Parser->release( &map );
 
-    pOut->print( "\n%s>>> %sprocessing is finished [ %s%s%s ]\n", COL_BLU, COL_GRY, flag?COL_GRN:COL_RED, flag?"OK":"!!", COL_GRY );
-    pOut->print( "%s>>> %scontact us: %stomasz.huczek@gmail.com%s, %sjasinski.andrzej@gmail.com%s.\n\n", COL_BLU, COL_GRY, COL_DEF, COL_GRY, COL_DEF, COL_GRY );
+    try
+    {
+        flag = Parser->process( argv[file_in], &map );
+        pOut->print( "%s>>>%s loaded %d buildings and %d transmitter possible positions [ %sOK%s ]\n", COL_GRN, COL_DEF, map.buildings.size(), map.transmitters.size(), COL_GRN, COL_DEF );
+
+        tabu_s.find_solution( &map, NULL );
+        Parser->release( &map );
+
+        pOut->print( "\n%s>>> %sprocessing is finished [ %s%s%s ]\n", COL_BLU, COL_GRY, flag?COL_GRN:COL_RED, flag?"OK":"!!", COL_GRY );
+        pOut->print( "%s>>> %scontact us: %stomasz.huczek@gmail.com%s, %sjasinski.andrzej@gmail.com%s.\n\n", COL_BLU, COL_GRY, COL_DEF, COL_GRY, COL_DEF, COL_GRY );
+    }
+    catch( pException & e )
+    {
+        pOut->print( "%s!!!%s %s\n", COL_RED, COL_DEF, e.show() );
+    }
+    catch( ... )
+    {
+        pOut->print( "%s!!!%s unknown exception.\n", COL_RED, COL_DEF );
+    }
 
     return( 0 );
 }

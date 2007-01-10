@@ -1,4 +1,5 @@
 #include "p_building.h"
+#include "p_cost_mgr.h"
 
 pBuilding::pBuilding()
 {
@@ -38,3 +39,9 @@ void pBuilding::set_pos( int nx, int ny )
     x = nx;
     y = ny;
 }
+
+float pBuilding::profit()
+{
+    return( population*pCostMgr::get_person_profit() );
+}
+
