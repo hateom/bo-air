@@ -3,11 +3,19 @@
 
 #include <string>
 
-#define COL_RED "\e[38m"
-#define COL_BLU "\e[36m"
-#define COL_GRN "\e[32m"
-#define COL_DEF "\e[39m"
-#define COL_GRY "\e[37m"
+#ifndef WIN32
+#	define COL_RED "\e[38m"
+#	define COL_BLU "\e[36m"
+#	define COL_GRN "\e[32m"
+#	define COL_DEF "\e[39m"
+#	define COL_GRY "\e[37m"
+#else
+#	define COL_RED ""
+#	define COL_BLU ""
+#	define COL_GRN ""
+#	define COL_DEF ""
+#	define COL_GRY ""
+#endif
 
 #define pOut pOutput::singleton()
 
