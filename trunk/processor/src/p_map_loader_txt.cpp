@@ -38,7 +38,7 @@ int pMapLoaderTxt::read_data( const char * filename )
 
         if( height == 0 )
         {
-            width = line.size();
+            width = (int)line.size();
         }
         else
         {
