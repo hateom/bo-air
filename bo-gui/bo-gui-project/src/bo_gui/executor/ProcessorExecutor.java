@@ -7,22 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessorExecutor{
-	private float zysk = 10101.21f;
-	private int[] wektorAnten = null;
 	private String output = "";
-	
+	private OutputParser parser;
+	private List<SolutionStruct> result;
+
 	public ProcessorExecutor(){
-		
-		// Uzupelnienie params
+		/// Tworzenie parsera
+		parser = new OutputParser();
+		result = new ArrayList<SolutionStruct>();
 	}
 	
-	public void Execute( String params ) throws IOException{
+	public void Execute( String path, String params ) throws IOException{
+		if (! result.isEmpty()){
+			result.clear();
+		}
+		//TODO zrobic jakies ladne czyszczenie tego...
+		output = new String("");
+		
 		List<String> command = new ArrayList<String>();
-		String [] cmd;
-
 		ProcessBuilder builder = new ProcessBuilder(command);
+		
 		//builder.directory( new File ("C:\\WINDOWS\\system32"));
-		if (System.getProperty("os.name").equalsIgnoreCase("Windows XP")){
+		if (System.getProperty("os.name").toLowerCase().startsWith("windows")){
 			//cmd = {"processor.exe"};
 			command.add("processor.exe");
 		} else{
@@ -41,21 +47,20 @@ public class ProcessorExecutor{
 		BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String temp;
 		while( (temp = reader.readLine()) != null){
+			result.add(parser.parse(temp));
 			output = output+temp+"\n";
 		}
-		output=output+System.getProperty("user.dir")+"\n";
-		output=output+System.getProperty("os.name");
-	}
-
-	public int[] getWektorAnten() {
-		return wektorAnten;
-	}
-
-	public float getZysk() {
-		return zysk;
 	}
 
 	public String getOutput() {
 		return output;
+	}
+	
+	public List<SolutionStruct> getResult() {
+		return result;
+	}
+	
+	public  void freeAll(){
+		
 	}
 }

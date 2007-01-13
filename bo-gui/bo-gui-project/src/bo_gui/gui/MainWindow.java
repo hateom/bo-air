@@ -1,47 +1,110 @@
 package bo_gui.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.border.EtchedBorder;
 
 import bo_gui.executor.ProcessorExecutor;
 
 public class MainWindow {
+	
+	private JTextPane text_pane;
+	private JScrollPane scroll_pane;
+	private ProcessorExecutor exec;
+	
 	public MainWindow(){
+		
+		exec = new ProcessorExecutor();
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("BO : Tabu Search Project");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		JPanel main_panel = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridwidth = 2;
+		c.gridx = 0;
+		c.gridy = 0;
 		
-		JPanel panel = new JPanel();
+		JPanel top_panel = new JPanel();
+		main_panel.add(top_panel);
 		
-		panel.setLayout(new BorderLayout());
-		//JLabel label = new JLabel("Maciora");
-		JTextPane pane = new JTextPane();
-		panel.add(pane);
-		frame.getContentPane().add(panel,BorderLayout.CENTER);
+		c.gridwidth = 1;
+		c.gridx = 1;
+		c.gridy = 1;
+		JPanelExtended left_panel = new JPanelExtended();
+		main_panel.add(left_panel);
+		
+		c.gridx = 1;
+		c.gridy = 1;
+		JPanelExtended right_panel = new JPanelExtended();
+		main_panel.add(right_panel);
+		
+		
+		JButton StartButton = new JButton("Start!");
+		right_panel.doloz(StartButton);
+		JButtonListener ActionListener = new JButtonListener();
+		StartButton.addActionListener(ActionListener);
+		
+		text_pane = new JTextPane();
+		scroll_pane = new JScrollPane(text_pane);
+		scroll_pane.setPreferredSize(new Dimension(500,300));
+		scroll_pane.setMinimumSize(new Dimension(500,300));
+		scroll_pane.setSize(500, 300);
+		//left_panel.setMinimumSize(new Dimension(500,500));
+		text_pane.setCaretPosition(text_pane.getDocument().getLength());
+		left_panel.doloz(scroll_pane);
+		
+		
+		left_panel.lf();
+		
+		Area_MapArea map = new Area_MapArea(this);
+		map.setPreferredSize(new Dimension(500,300));
+		map.setMinimumSize(new Dimension(500,300));
+		map.setSize(new Dimension(500,300));
+		map.setToolTipText("Rysowanie");
+		left_panel.doloz(map);
+		
+		frame.getContentPane().add(main_panel,BorderLayout.CENTER);
 		frame.pack();
 		frame.setSize(900,600);
 		frame.setResizable(false);
 		frame.setVisible(true);
-		
-		
-		ProcessorExecutor exec = new ProcessorExecutor();
-		try {
-			exec.Execute("");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	}
+	
+	public class JButtonListener implements ActionListener{
+
+		MainWindow okno;
+		JButtonListener(){
 		}
-		float zysk = exec.getZysk();
-		String linia = exec.getOutput();
-		int[] wektorAnten = exec.getWektorAnten();
 		
-		pane.setText("" + linia);
+		public void actionPerformed(ActionEvent event) {
+			// TODO Auto-generated method stub
+
+			text_pane.setText("");
+			try {
+				exec.Execute("","");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String linia = exec.getOutput();
+			text_pane.setText("" + linia);
+		}
 	}
 }
