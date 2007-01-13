@@ -31,7 +31,7 @@ public class MainWindow {
 		frame.setVisible(true);
 		
 		
-		ProcessorExecutor exec = new ProcessorExecutor();;
+		ProcessorExecutor exec = new ProcessorExecutor();
 		try {
 			exec.Execute("");
 		} catch (IOException e) {

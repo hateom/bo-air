@@ -17,11 +17,23 @@ public class ProcessorExecutor{
 	}
 	
 	public void Execute( String params ) throws IOException{
-		List command = new ArrayList();
-		String [] cmd = {"processor.exe"}; 
+		List<String> command = new ArrayList<String>();
+		String [] cmd;
+
+		ProcessBuilder builder = new ProcessBuilder(command);
+		//builder.directory( new File ("C:\\WINDOWS\\system32"));
+		if (System.getProperty("os.name").equalsIgnoreCase("Windows XP")){
+			//cmd = {"processor.exe"};
+			command.add("processor.exe");
+		} else{
+			command.add("./processor");
+		}
 		Process process = null;
+		//command.add("-s");
+		command.add("input_data");
 		try {
-			process = Runtime.getRuntime().exec(cmd);
+			//process = Runtime.getRuntime().exec(cmd);
+			process = builder.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -31,7 +43,8 @@ public class ProcessorExecutor{
 		while( (temp = reader.readLine()) != null){
 			output = output+temp+"\n";
 		}
-		output=output+System.getProperty("user.dir");
+		output=output+System.getProperty("user.dir")+"\n";
+		output=output+System.getProperty("os.name");
 	}
 
 	public int[] getWektorAnten() {
