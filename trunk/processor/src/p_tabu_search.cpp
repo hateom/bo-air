@@ -55,7 +55,10 @@ int pTabuSearch::find_solution( pMap * map, pSolution * solution )
 
         if( on_tabu( best ) )
         {
-            pOut->print( "%stabu list element repeat\n", COL_GRY );
+            pOut->print( "\n%s>>  %stabu list element repeat\n", COL_BLU, COL_GRY );
+            pOut->print( "%s>>  %sommiting tabu list result\n", COL_BLU, COL_GRY );
+            move.next();
+            continue;
         }
         else
         {
@@ -83,6 +86,36 @@ int pTabuSearch::find_solution( pMap * map, pSolution * solution )
         pOut->printa( ";\n" );
     }
 
+    pSolution * b;
+    b = tabu_best( map );
+    if( b )
+    {
+        pOut->print( ">>> best solution: %2.2f\n", b->penalty( map ) );
+    }
+
     return( 0 );
 }
 
+pSolution * pTabuSearch::tabu_best( pMap * map )
+{
+    P_ASSERT( map != NULL, "empty argument <pMap * map>" );
+
+    size_t size;
+    size = tabu_list.size();
+    pSolution * best;
+
+    if( !size ) return( NULL );
+
+    best = tabu_list[0];
+    if( size == 1 ) return( best );
+
+    for( size_t i=1; i<size; ++i )
+    {
+        if( tabu_list[i]->penalty( map ) < best->penalty( map ) )
+        {
+            best = tabu_list[i];
+        }
+    }
+
+    return( best );
+}

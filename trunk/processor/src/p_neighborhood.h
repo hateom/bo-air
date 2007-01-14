@@ -20,6 +20,7 @@ public:
 protected:
     int do_perm( pSolution * sol, int value );
     int do_switch( pSolution * sol );
+    int do_rand( pSolution * sol );
 
     std::vector<pSolution*> list;
     int perm_val;

@@ -28,6 +28,15 @@ int pMove::init()
     move.clear();
     move.push_back( PM_PERM );
     move.push_back( PM_SWITCH );
+    move.push_back( PM_RAND );
+    move.push_back( PM_PERM );
+    move.push_back( PM_SWITCH );
+    move.push_back( PM_RAND );
+    move.push_back( PM_PERM );
+    move.push_back( PM_SWITCH );
+    move.push_back( PM_RAND );
+    move.push_back( PM_PERM );
+    move.push_back( PM_SWITCH );
     curr = move.begin();
 
     return( 0 );
