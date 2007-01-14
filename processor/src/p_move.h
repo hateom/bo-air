@@ -3,6 +3,7 @@
 
 #define PM_PERM     0x0001
 #define PM_SWITCH   0x0002
+#define PM_RAND     0x0003
 
 #include <vector>
 

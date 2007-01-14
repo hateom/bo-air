@@ -14,6 +14,7 @@ public:
 
     int find_solution( pMap * map, pSolution * solution );
     bool on_tabu( pSolution * s );
+    pSolution * tabu_best( pMap * map );
 
 protected:
     std::vector<pSolution*> tabu_list;
