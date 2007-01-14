@@ -23,9 +23,26 @@ void pOutput::print( const char * str, ... )
     printf( "%s%s%s", COL_DEF, buffer, COL_DEF );
 }
 
+void pOutput::printa( const char * str, ... )
+{
+    static char buffer[256] = "";
+    va_list al;
+
+    va_start( al, str );
+    vsprintf( buffer, str, al );
+    va_end( al );
+
+    printf( "%s%s%s", COL_DEF, buffer, COL_DEF );
+}
+
 void pOutput::print( std::string str )
 {
     print( str.c_str() );
+}
+
+void pOutput::printa( std::string str )
+{
+    printa( str.c_str() );
 }
 
 void pOutput::set_silent( bool on )

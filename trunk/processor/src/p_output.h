@@ -29,6 +29,8 @@ public:
 
     void print( const char * str, ... );
     void print( std::string str );
+    void printa( const char * str, ... );
+    void printa( std::string str );
 
     void set_silent( bool on );
 

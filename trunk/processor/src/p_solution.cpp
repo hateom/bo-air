@@ -94,3 +94,15 @@ bool pSolution::equals( pSolution * s )
     return( true );
 }
 
+int pSolution::not_null()
+{
+    size_t size;
+    int cnt = 0;
+    size = list.size();
+    for( size_t i=0; i<size; ++i )
+    {
+        if( list[i]->get_type() != 0 ) cnt++;
+    }
+    return( cnt );
+}
+
