@@ -29,52 +29,58 @@ bool pTabuSearch::on_tabu( pSolution * s )
 
 int pTabuSearch::find_solution( pMap * map, pSolution * solution )
 {
-    P_ASSERT( map != NULL /*&& solution != NULL*/, "empty arguments" );
+    P_ASSERT( map != NULL, "empty argument <pMap * map>" );
 
     pNeighborhood nb;
     pMove move;
     pSolution s_sol, * best;
+    int n_null, nl;
 
     s_sol.init_random( map );
     best = &s_sol;
 
     move.init();
 
-    pOut->print( ">>> starting tabu-search loop...\n" );
+    pOut->print( "%s>>>%s starting tabu-search loop...\n", COL_GRN, COL_GRY );
 
     while( move.remaining() )
     {
-        pOut->print( ">>> creating neighborhood... %p, %p ", best, &move );
-        if( nb.create( best, &move ) == 0 )
-        {
-            pOut->print( "[ %sOK%s ]\n", COL_GRN, COL_DEF );
-        }
-        else
+        if( nb.create( best, &move ) != 0 )
         {
             pOut->print( "[ %s!!%s ]\n", COL_RED, COL_DEF );
         }
 
         pOut->print( ">>> looking for best solution... " );
         best = nb.best_result( map );
-        pOut->print( "(%2.2f) [ %sOK%s ]\n", best->penalty( map ), COL_GRN, COL_DEF );
 
         if( on_tabu( best ) )
         {
-            pOut->print( ">>> tabu list element repeat\n" );
+            pOut->print( "%stabu list element repeat\n", COL_GRY );
         }
         else
         {
-            pOut->print( ">>> adding to tabu list %p\n", best );
+            pOut->print( "adding to tabu list <cost:%2.2f> ", best->penalty( map ) );
             tabu_list.push_back( best );
+            pOut->print( "[ %sOK%s ]\n", COL_GRN, COL_DEF );
         }
         move.next();
 
-        pOut->print( "[%d]: ", best->list.size() );
+        n_null = best->not_null();
+        nl = 0;
+        if( !n_null )
+        {
+            pOut->print( "%s>>> ommiting empty result.\n", COL_GRY );
+            continue;
+        }
+        
+        pOut->printa( "%2.2f;", best->penalty( map ) );
         for( size_t i=0; i<best->list.size(); ++i )
         {
-            pOut->print( "%d; ", best->list[i]->get_type() );
+            if( best->list[i]->get_type() == 0 ) continue;
+            pOut->printa( "%d:%d%c", i, best->list[i]->get_type(), nl < (n_null-1) ? ',':'\0' );
+            nl++;
         }
-        pOut->print( "\n" );
+        pOut->printa( ";\n" );
     }
 
     return( 0 );

@@ -18,6 +18,7 @@ public:
     bool equals( pSolution * s );
     void release();
     void init_random( pMap * map );
+    int  not_null();
 
     std::vector<pTransmitter*> list;
 };
