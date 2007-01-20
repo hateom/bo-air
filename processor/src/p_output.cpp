@@ -56,3 +56,8 @@ pOutput * pOutput::singleton()
     return( &static_obj );
 }
 
+const char * pOutput::color( const char * col )
+{
+    return( silent ? "" : col );
+}
+
