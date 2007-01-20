@@ -22,7 +22,7 @@ public class JPanelExtended extends JPanel{
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		setLayout(new GridBagLayout());
 		constr = new GridBagConstraints();
-		constr.fill = GridBagConstraints.NONE;
+		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridx = 0;
 		constr.gridy = 0;
 		constr.insets = new Insets(3,3,2,2);

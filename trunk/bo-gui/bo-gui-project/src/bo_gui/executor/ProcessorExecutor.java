@@ -13,38 +13,28 @@ public class ProcessorExecutor implements Runnable{
 	private OutputParser parser;
 	private List<SolutionStruct> result;
 	private Exectuor_Thread_Menager menager;
+	private String params;
+	//
 	
-	public ProcessorExecutor(Exectuor_Thread_Menager menager ){
+	public ProcessorExecutor(Exectuor_Thread_Menager menager , String param){
 		/// Tworzenie parsera
 		parser = new OutputParser();
 		result = new ArrayList<SolutionStruct>();
 		this.menager = menager;
+		this.params = param;
 	}
 	/*
-	public void Execute( String path, String params ) throws IOException{
-		
+	public synchronized void halt(){
+		halt = true;
+		menager.print_debug_info("Halt requested, please wait..");
 	}
-
-	public String getOutput() {
-		return output;
-	}
-	
-	public List<SolutionStruct> getResult() {
-		return result;
-	}
-	
-	public  void freeAll(){
-		
-	}
-*/
+	*/
 	public void run() {
-		//try 
-		//{
-			// TODO Auto-generated method stub
+		
+			menager.print_debug_info("[E]Process started...");
 			if (! result.isEmpty()){
 				result.clear();
 			}
-			//TODO zrobic jakies ladne czyszczenie tego...
 			output = "";
 			
 			List<String> command = new ArrayList<String>();
@@ -59,33 +49,35 @@ public class ProcessorExecutor implements Runnable{
 			}
 			Process process = null;
 			command.add("-s");
-			command.add("input_data");
+			command.add(params);
 			try {
-				//process = Runtime.getRuntime().exec(cmd);
 				process = builder.start();
+				menager.setProcess(process);
+				//process.waitFor();
+				//process.exitValue();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+				menager.print_debug_info("[E]" + e.getMessage());
+			} /*catch (InterruptedException e) {
+				menager.print_debug_info("[E]Got TermSignal, terminating subprocess..");
+				process.destroy();	
+			}*/
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String temp;
+
 			try {
-				while( (temp = reader.readLine()) != null)
+				while( (temp = reader.readLine()) != null && !Thread.interrupted())
 				{
 					result.add(parser.parse(temp));
 					output = output+temp+"\n";
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				menager.print_debug_info("[E]" + e.getMessage());
 			}
-			menager.zrobcos("Jestem procesem!!");
-		//}
-		/*
-		catch (InterruptedException e) 
-		{
-			return;
-		}*/
-		}
+			menager.setProcessResult(result);
+			menager.signalizeFinish();
+			menager.print_debug_info("[E]Process finished");
+	}
 		
 }
