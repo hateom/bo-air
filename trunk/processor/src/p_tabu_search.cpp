@@ -80,7 +80,7 @@ int pTabuSearch::find_solution( pMap * map, pSolution * solution )
         for( size_t i=0; i<best->list.size(); ++i )
         {
             if( best->list[i]->get_type() == 0 ) continue;
-            pOut->printa( "%d:%d%c", i, best->list[i]->get_type(), nl < (n_null-1) ? ',':'\0' );
+            pOut->printa( "%d:%d%c", i, best->list[i]->get_type(), nl < (n_null-1) ? ';':'\0' );
             nl++;
         }
         pOut->printa( ";\n" );
