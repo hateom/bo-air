@@ -1,11 +1,13 @@
 package bo_gui.executor;
 
+import java.util.List;
+
 public class SolutionStruct {
 	public float profit = 0.0f;
-	public AntennaStruct antenna;
+	public List<AntennaStruct> transmitter;
 	
-	SolutionStruct(float profit, AntennaStruct antenna){
+	SolutionStruct(float profit, List<AntennaStruct> transmitter){
 		this.profit = profit;
-		this.antenna = antenna;
+		this.transmitter = transmitter;
 	}
 }

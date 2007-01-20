@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,16 +20,17 @@ import javax.swing.JTextPane;
 import javax.swing.border.EtchedBorder;
 
 import bo_gui.executor.ProcessorExecutor;
+import bo_gui.executor.SolutionStruct;
 
 public class MainWindow {
 	
-	private JTextPane text_pane;
+	protected JTextPane text_pane;
 	private JScrollPane scroll_pane;
-	private ProcessorExecutor exec;
+	protected Exectuor_Thread_Menager menager;
 	
 	public MainWindow(){
 		
-		exec = new ProcessorExecutor();
+		menager = new Exectuor_Thread_Menager(this);
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("BO : Tabu Search Project");
@@ -97,14 +99,8 @@ public class MainWindow {
 			// TODO Auto-generated method stub
 
 			text_pane.setText("");
-			try {
-				exec.Execute("","");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String linia = exec.getOutput();
-			text_pane.setText("" + linia);
+			menager.start_thread();
+			//String linia = exec.getOutput();
 		}
 	}
 }
