@@ -4,11 +4,11 @@
 #include <string>
 
 #ifndef WIN32
-#	define COL_RED "\e[38m"
-#	define COL_BLU "\e[36m"
-#	define COL_GRN "\e[32m"
-#	define COL_DEF "\e[39m"
-#	define COL_GRY "\e[37m"
+#	define COL_RED pOut->color( "\e[38m" )
+#	define COL_BLU pOut->color( "\e[36m" )
+#	define COL_GRN pOut->color( "\e[32m" )
+#	define COL_DEF pOut->color( "\e[39m" )
+#	define COL_GRY pOut->color( "\e[37m" )
 #else
 #	define COL_RED ""
 #	define COL_BLU ""
@@ -33,6 +33,8 @@ public:
     void printa( std::string str );
 
     void set_silent( bool on );
+
+    const char * color( const char * );
 
 private:
     bool silent;
