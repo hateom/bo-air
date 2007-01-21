@@ -8,11 +8,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,7 +25,7 @@ import javax.swing.border.EtchedBorder;
 import bo_gui.executor.ProcessorExecutor;
 import bo_gui.executor.SolutionStruct;
 
-public class MainWindow {
+public class MainWindow{
 	
 	private JScrollPane scroll_pane;
 	
@@ -31,7 +33,8 @@ public class MainWindow {
 	protected Exectuor_Thread_Menager menager;
 	protected Area_MapArea map;
 	protected Area_GraphArea graph;
-	protected JButton StartButton;
+	protected JButton StartButton,OpenFileButton;
+	protected JFileChooser fc;
 	
 	public MainWindow(){
 		
@@ -40,6 +43,8 @@ public class MainWindow {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("BO : Tabu Search Project");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		fc = new JFileChooser();
 		
 		JPanel main_panel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -65,10 +70,14 @@ public class MainWindow {
 		c.gridy = 1;
 		JPanel bottom_panel = new JPanel();
 		main_panel.add(bottom_panel);
+		JButtonListener ActionListener = new JButtonListener();
+		
+		OpenFileButton = new JButton("Open Map...");
+		right_panel.doloz(OpenFileButton);
+		OpenFileButton.addActionListener(ActionListener);
 		
 		StartButton = new JButton("Start!");
 		right_panel.doloz(StartButton);
-		JButtonListener ActionListener = new JButtonListener();
 		StartButton.addActionListener(ActionListener);
 		
 		right_panel.lf();
@@ -110,15 +119,38 @@ public class MainWindow {
 		frame.setResizable(false);
 		frame.setVisible(true);
 	}
-	
 	public class JButtonListener implements ActionListener{
-
-		MainWindow okno;
-		JButtonListener(){
-		}
 		
 		public void actionPerformed(ActionEvent event) {
-			menager.start_thread();
+			if (event.getSource() == StartButton){
+				menager.start_thread();
+			}
+			if (event.getSource() == OpenFileButton){
+				fc.setDialogTitle("Open Map File...");
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+				 int returnVal = fc.showOpenDialog(null);
+				 if (returnVal == JFileChooser.APPROVE_OPTION) {
+					 File file = fc.getSelectedFile();
+					 menager.print_debug_info("[G]Opening file.."+file.getName());
+					 menager.setFileName(file.getAbsolutePath());
+					 map.DrawMap(file);
+				 }
+				 else {
+					 
+				 }
+			}
 		}
+		
 	}
+/*	
+	public class FileSelectorListener implements ActionListener{
+		public FileSelectorListener(){
+			
+		}
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}
+		
+	}
+	*/
 }

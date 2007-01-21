@@ -17,6 +17,7 @@ public class Exectuor_Thread_Menager {
 	private int best_solution;
 	private boolean halted = false;
 	private Process proces;
+	private String filename;
 	
 	public Exectuor_Thread_Menager( MainWindow okno){
 		this.okno = okno;
@@ -25,24 +26,29 @@ public class Exectuor_Thread_Menager {
 	
 	
 	public synchronized void start_thread(){
-		if (exec!=null && exec.isAlive()){
-			terminate_thread();
-			proces.destroy();
-			halted = true;
-			okno.StartButton.setEnabled(false);
+		if( filename != "" && filename != null){
+			if (exec!=null && exec.isAlive()){
+				terminate_thread();
+				proces.destroy();
+				halted = true;
+				okno.StartButton.setEnabled(false);
+			}
+			else{
+				halted = false;
+				Calendar datownik = Calendar.getInstance();
+				print_debug_info("-----" + datownik.getTime().toString()+"-----");
+				print_debug_info("[M]Starting processing thread...");
+				exec = new Thread( new ProcessorExecutor(this, filename) );
+				exec.start();
+				okno.StartButton.setText("Stop");
+			}
+		} else{
+			print_debug_info("[M]No input file..");
 		}
-		else{
-			halted = false;
-			Calendar datownik = Calendar.getInstance();
-			print_debug_info("-----" + datownik.getTime().toString()+"-----");
-			print_debug_info("[M]Starting processing thread...");
-			exec = new Thread( new ProcessorExecutor(this, "input_data") );
-			exec.start();
-			okno.StartButton.setText("Stop");
-		}
-		
 	}
-	
+	public synchronized void setFileName( String filename){
+		this.filename = filename;
+	}
 	public synchronized void signalizeFinish(){
 		okno.StartButton.setEnabled(true);
 		okno.StartButton.setText("Start");
@@ -73,6 +79,7 @@ public class Exectuor_Thread_Menager {
 				}
 			}
 			okno.graph.setPoints(results_list);
+			okno.map.DrawSolution(solution.get(best_solution));
 		}
 		okno.StartButton.setEnabled(true);
 	}
