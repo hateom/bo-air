@@ -76,6 +76,7 @@ public class MapImageBuilder {
 			g.setColor(Color.BLACK);
 			for(int u=0;u<map_height;u++){
 				for(int i=0;i<map_width;i++){
+					//System.out.println(i+" "+u);
 					if(linie_list.get(u).charAt(i) == ' ') {
 						g.setColor(Color.BLACK);
 						g.drawRect(i*box_w, u*box_h, box_w, box_h);

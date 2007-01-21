@@ -99,7 +99,7 @@ public class Exectuor_Thread_Menager {
 				}
 			}
 			okno.graph.setPoints(results_list);
-			okno.map.DrawSolution(solution.get(best_solution));
+			if ( results_list.size() != 0 ) okno.map.DrawSolution(solution.get(best_solution));
 		}
 		okno.StartButton.setEnabled(true);
 	}

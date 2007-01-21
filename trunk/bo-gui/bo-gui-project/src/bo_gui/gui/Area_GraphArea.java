@@ -36,7 +36,7 @@ public class Area_GraphArea extends JComponent{
 	}
 	
 	public void setPoints( List<Float> points){
-		if (points != null){
+		if (points != null && points.size() != 0){
 			
 			Dimension dims = this.getSize();
 			int h = getHeight(); 
