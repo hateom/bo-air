@@ -50,7 +50,7 @@ public class ProcessorExecutor implements Runnable{
 			Process process = null;
 			command.add("-s");
 			command.add(params);
-			try {
+			try { 
 				process = builder.start();
 				menager.setProcess(process);
 				//process.waitFor();
