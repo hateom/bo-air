@@ -1,9 +1,11 @@
 package bo_gui.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
 import bo_gui.executor.ProcessorExecutor;
@@ -17,16 +19,31 @@ public class Exectuor_Thread_Menager {
 	private int best_solution;
 	private boolean halted = false;
 	private Process proces;
-	private String filename;
+	private String filename, prog_name, params;
 	
 	public Exectuor_Thread_Menager( MainWindow okno){
 		this.okno = okno;
 		results_list = new ArrayList<Float>();
+		if (System.getProperty("os.name").toLowerCase().startsWith("windows")){
+			prog_name = "processor.exe";
+		} else{
+			prog_name = "./processor";
+		}
 	}
 	
 	
 	public synchronized void start_thread(){
-		if( filename != "" && filename != null){
+		params = "";
+		boolean error = !(new File(prog_name).exists());
+			if (error){
+				print_debug_info("[M]No executor file, opening dialog");
+				File file = okno.ShowOpenFilePopup("Open Executor File...");
+					if (file != null ) {
+						prog_name = file.getAbsolutePath();
+						error = !file.exists();
+					}
+			}
+		if( filename != "" && filename != null && !error){
 			if (exec!=null && exec.isAlive()){
 				terminate_thread();
 				proces.destroy();
@@ -38,11 +55,14 @@ public class Exectuor_Thread_Menager {
 				Calendar datownik = Calendar.getInstance();
 				print_debug_info("-----" + datownik.getTime().toString()+"-----");
 				print_debug_info("[M]Starting processing thread...");
-				exec = new Thread( new ProcessorExecutor(this, filename) );
+				exec = new Thread( new ProcessorExecutor(this, prog_name, params, filename) );
 				exec.start();
 				okno.StartButton.setText("Stop");
 			}
-		} else{
+		} else if (error){
+			print_debug_info("[M]No executor file...");
+		} 
+		else{
 			print_debug_info("[M]No input file..");
 		}
 	}

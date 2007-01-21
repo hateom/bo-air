@@ -13,15 +13,18 @@ public class ProcessorExecutor implements Runnable{
 	private OutputParser parser;
 	private List<SolutionStruct> result;
 	private Exectuor_Thread_Menager menager;
-	private String params;
+	private String inFile, program_name, params;
 	//
 	
-	public ProcessorExecutor(Exectuor_Thread_Menager menager , String param){
+	public ProcessorExecutor(Exectuor_Thread_Menager menager , String pExecutor, String params, String inFile){
 		/// Tworzenie parsera
+		
 		parser = new OutputParser();
 		result = new ArrayList<SolutionStruct>();
 		this.menager = menager;
-		this.params = param;
+		this.inFile = new String( inFile );
+		this.program_name = new String( pExecutor);
+		this.params = new String ( params );
 	}
 	/*
 	public synchronized void halt(){
@@ -41,15 +44,12 @@ public class ProcessorExecutor implements Runnable{
 			ProcessBuilder builder = new ProcessBuilder(command);
 			
 			//builder.directory( new File ("C:\\WINDOWS\\system32"));
-			if (System.getProperty("os.name").toLowerCase().startsWith("windows")){
-				//cmd = {"processor.exe"};
-				command.add("processor.exe");
-			} else{
-				command.add("./processor");
-			}
+
 			Process process = null;
+			command.add(program_name);
 			command.add("-s");
 			command.add(params);
+			command.add(inFile);
 			try { 
 				process = builder.start();
 				menager.setProcess(process);
