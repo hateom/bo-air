@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JComponent;
 
@@ -25,21 +27,31 @@ public class Area_MapArea extends JComponent{
 		this.okno = okno;
 		setBackground(Color.WHITE);
 		setOpaque(true);
-		Map_creator = new MapImageBuilder();
+		Map_creator = new MapImageBuilder( 500,300 );//this.getWidth(), this.getHeight() );
 	}
 	
 	public void DrawMap( File InputFile ){
-		image = Map_creator.CreateMapImage(InputFile);
+		try {
+			image = Map_creator.CreateMapImage(InputFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			okno.menager.print_debug_info("[G-MB]Input File not found...");
+		} catch (IOException e) {
+			e.printStackTrace();
+			okno.menager.print_debug_info("[G-MB]IOException");
+		}
 		if (image != null){
 			
 		}
 		else{
 			
 		}
+		this.repaint();
 	}
 	
 	public void DrawSolution( SolutionStruct solution){
-		
+		Map_creator.CreateSolutionImage(solution);
+		this.repaint();
 	}
 	
 	protected void paintComponent(Graphics g1){
@@ -47,6 +59,7 @@ public class Area_MapArea extends JComponent{
 		if (isOpaque()) {
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getWidth(), getHeight());
+			g.drawImage(image,null,null);
 		}
 		super.paintComponent(g);
 	}

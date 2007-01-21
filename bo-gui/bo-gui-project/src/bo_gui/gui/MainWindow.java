@@ -119,6 +119,20 @@ public class MainWindow{
 		frame.setResizable(false);
 		frame.setVisible(true);
 	}
+	
+	public File ShowOpenFilePopup(String title){
+		File file= null;
+		fc.setDialogTitle(title);
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		int returnVal = fc.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			file = fc.getSelectedFile();
+		} else {
+			
+		}
+		return file;
+	}
+	
 	public class JButtonListener implements ActionListener{
 		
 		public void actionPerformed(ActionEvent event) {
@@ -126,31 +140,17 @@ public class MainWindow{
 				menager.start_thread();
 			}
 			if (event.getSource() == OpenFileButton){
-				fc.setDialogTitle("Open Map File...");
-				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-				 int returnVal = fc.showOpenDialog(null);
-				 if (returnVal == JFileChooser.APPROVE_OPTION) {
-					 File file = fc.getSelectedFile();
-					 menager.print_debug_info("[G]Opening file.."+file.getName());
-					 menager.setFileName(file.getAbsolutePath());
-					 map.DrawMap(file);
+					 File file = ShowOpenFilePopup("Open Map File");
+					 if (file!= null){
+						 menager.print_debug_info("[G]Opening file.."+file.getName());
+						 menager.setFileName(file.getAbsolutePath());
+						 map.DrawMap(file);
+					 }
 				 }
 				 else {
 					 
 				 }
-			}
 		}
 		
 	}
-/*	
-	public class FileSelectorListener implements ActionListener{
-		public FileSelectorListener(){
-			
-		}
-		public void actionPerformed(ActionEvent arg0) {
-			
-		}
-		
-	}
-	*/
 }
