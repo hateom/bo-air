@@ -33,7 +33,7 @@ int pTabuSearch::find_solution( pMap * map, pSolution * solution )
 
     pNeighborhood nb;
     pMove move;
-    pSolution s_sol, * best;
+    pSolution s_sol, * best;//, * last;
     int n_null, nl;
 
     s_sol.init_random( map );
@@ -51,7 +51,14 @@ int pTabuSearch::find_solution( pMap * map, pSolution * solution )
         }
 
         pOut->print( ">>> looking for best solution... " );
+//		last = best;
         best = nb.best_result( map );
+		if( !best )
+		{
+			pOut->print( ">>> empty neighborhood\n" );
+//			best = last;
+			continue;
+		}
 
         if( on_tabu( best ) )
         {

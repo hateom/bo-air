@@ -56,17 +56,18 @@ float pSolution::penalty( pMap * map )
     P_ASSERT( map != NULL, "empty argument" );
 
     float sum = 0;
+	size_t i;
 
-    for( size_t i=0; i<list.size(); ++i )
+    for( i=0; i<list.size(); ++i )
     {
         sum += list[i]->get_cost();
     }
 
-    for( size_t i=0; i<map->buildings.size(); ++i )
+    for( i=0; i<map->buildings.size(); ++i )
     {
         for( size_t j=0; j<list.size(); ++j )
         {
-            if( list[i]->in_range( map->buildings[i] ) )
+            if( list[j]->in_range( map->buildings[i] ) )
             {
                 sum -= map->buildings[i]->profit();
                 break;
