@@ -36,9 +36,9 @@ bool pParser::process( const char * in_file, pMap * map )
         for( unsigned int x=0; x<loader->get_width(); ++x )
         {
             item = loader->get_data( x, y );
-            if( item == '+' )
+            if( item >= 'a' && item <= 'z' )
             {
-                map->buildings.push_back( new pBuilding( x, y, 1 ) );
+                map->buildings.push_back( new pBuilding( x, y, 100*(item-'a') ) );
             }
             if( item == ' ' )
             {
@@ -52,15 +52,17 @@ bool pParser::process( const char * in_file, pMap * map )
 
 void pParser::release( pMap * map )
 {
+	size_t i;
+
     if( map )
     {
-        for( size_t i=0; i<map->buildings.size(); ++i )
+        for( i=0; i<map->buildings.size(); ++i )
         {
             delete map->buildings[i];
         }
         map->buildings.clear();
 
-        for( size_t i=0; i<map->transmitters.size(); ++i )
+        for( i=0; i<map->transmitters.size(); ++i )
         {
             delete map->transmitters[i];
         }

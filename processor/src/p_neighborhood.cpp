@@ -49,6 +49,8 @@ int pNeighborhood::create( pSolution * solution, pMove * move )
         return( do_switch( solution ) );
     case PM_RAND:
         return( do_rand( solution ) );
+	default:
+		return( -1 );
     }
 
     return( -1 );
