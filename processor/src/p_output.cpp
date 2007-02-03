@@ -1,4 +1,5 @@
-#include <stdarg.h>
+#include <cstdarg>
+#include <iostream>
 #include "p_output.h"
 
 pOutput::pOutput() : silent(false)
@@ -20,7 +21,7 @@ void pOutput::print( const char * str, ... )
     vsprintf( buffer, str, al );
     va_end( al );
 
-    printf( "%s%s%s", COL_DEF, buffer, COL_DEF );
+    std::cout << COL_DEF << buffer << COL_DEF;
 }
 
 void pOutput::printa( const char * str, ... )
@@ -32,7 +33,7 @@ void pOutput::printa( const char * str, ... )
     vsprintf( buffer, str, al );
     va_end( al );
 
-    printf( "%s%s%s", COL_DEF, buffer, COL_DEF );
+    std::cout << COL_DEF << buffer << COL_DEF;
 }
 
 void pOutput::print( std::string str )

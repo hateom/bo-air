@@ -1,71 +1,36 @@
-#include <stdio.h>
-#include <string.h>
-#include "p_output.h"
-#include "p_utils.h"
-#include "p_parser.h"
-#include "p_map.h"
-#include "p_tabu_search.h"
+#include "p_app.h"
+#include "p_error.h"
 
 int main( int argc, char * argv[] )
 {
-    int file_in = 1;
-    bool flag;
-    pMap map;
-    pTabuSearch tabu_s;
-
-    if( argc == 3 && strcmp( argv[1], "-s" ) == 0 )
+    try
     {
-        pOut->set_silent( true );
-        file_in = 2;
+        pApp app;
+
+        if( !app.init( argc, argv ) )
+        {
+            pError( ">> initialization failed!" );
+            return -1;
+        }
+
+        if( !app.run() )
+        {
+            pError( ">> app.run() error!" );
+            app.free();
+            return -2;
+        }
+
+        app.free();
+    }
+    catch( pException & e )
+    {
+        pErrorMgr::print();
+        e.show();
+        return -3;
     }
 
-    pOut->print( "%s", COL_DEF );
-    if( argc == 1 || argc > 3 )
-    {
-        pOut->print( "!!! %sERROR%s> wrong parameters\nusage:\n\t%s (-s) <input_file>\nparams:\n\t-s\t silent mode\n\n", COL_RED, COL_DEF, argv[0] );
-        return( -1 );
-    }
+    pErrorMgr::print();
 
-    pOut->print( "%s>>> %susing input file <%s%s%s>... ", COL_BLU, COL_GRY, COL_DEF, COL_GRY, argv[file_in] );
-    if( !p_utils::file_exists( argv[file_in] ) )
-    {
-        pOut->print( "%s[ %s!!%s ]\n!!! ERROR> file <%s> does not exists!\n", COL_GRY, COL_RED, COL_GRY, argv[file_in] );
-        return( -2 );
-    }
-    else
-    {
-        pOut->print( "%s[ %sOK%s ]\n", COL_GRY, COL_GRN, COL_GRY );
-    }
-
-    pOut->print( "%s>>>%s processing input file and generating output.\n", COL_BLU, COL_GRY );
-
-	try
-    {
-        flag = Parser->process( argv[file_in], &map );
-        pOut->print( "%s>>>%s loaded %d buildings and %d transmitter possible positions [ %sOK%s ]\n", COL_GRN, COL_DEF, map.buildings.size(), map.transmitters.size(), COL_GRN, COL_DEF );
-
-		if( !map.transmitters.size() )
-		{
-			pOut->print( "%s>>>%s nothing to solve!\n", COL_GRN, COL_DEF );
-			return( 0 );
-		}
-
-        tabu_s.find_solution( &map, NULL );
-        Parser->release( &map );
-
-        pOut->print( "\n%s>>> %sprocessing is finished [ %s%s%s ]\n", COL_BLU, COL_GRY, flag?COL_GRN:COL_RED, flag?"OK":"!!", COL_GRY );
-        pOut->print( "%s>>> %scontact us: %stomasz.huczek@gmail.com%s, %sjasinski.andrzej@gmail.com%s.\n\n", COL_BLU, COL_GRY, COL_DEF, COL_GRY, COL_DEF, COL_GRY );
-    }
-	catch( pException & e )
-    {
-        pOut->print( "%s!!!%s %s\n", COL_RED, COL_DEF, e.show() );
-    }
-/*
-	catch( ... )
-    {
-        pOut->print( "%s!!!%s unknown exception.\n", COL_RED, COL_DEF );
-    }
-*/
-    return( 0 );
+    return 0;
 }
 

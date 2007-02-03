@@ -3,23 +3,27 @@
 #include "p_error.h"
 #include "p_output.h"
 
-pSolution::pSolution()
+pSolution::pSolution() : size(0), vec(NULL)
 {
 }
 
 pSolution::pSolution( pSolution * ptr )
 {
-    for( size_t i=0; i<ptr->list.size(); ++i )
+    if( ptr->size )
     {
-        list.push_back( new pTransmitter( ptr->list[i] ) );
+        vec = new int[ptr->size];
+        size = ptr->size;
+        memcpy( vec, ptr->vec, size*sizeof(int) );
     }
 }
 
 pSolution::pSolution( pSolution & rhs )
 {
-    for( size_t i=0; i<rhs.list.size(); ++i )
+    if( rhs.size )
     {
-        list.push_back( new pTransmitter( rhs.list[i] ) );
+        vec = new int[rhs.size];
+        size = rhs.size;
+        memcpy( vec, rhs.vec, size*sizeof(int) );
     }
 }
 
@@ -30,80 +34,28 @@ pSolution::~pSolution()
 
 void pSolution::release()
 {
-    for( size_t i=0; i<list.size(); ++i )
+    if( size )
     {
-        delete list[i];
+        delete [] vec;
+        vec = NULL;
+        size = 0;
     }
-    list.clear();
-}
-
-void pSolution::init_random( pMap * map )
-{
-    P_ASSERT( map != NULL, "empty argument" );
-
-    release();
-
-    size_t size = map->transmitters.size();
-
-    for( size_t i=0; i<size; ++i )
-    {
-        list.push_back( new pTransmitter( rand()%3==0?1:0 ) );
-    }
-}
-
-float pSolution::penalty( pMap * map )
-{
-    P_ASSERT( map != NULL, "empty argument" );
-
-    float sum = 0;
-	size_t i;
-
-    for( i=0; i<list.size(); ++i )
-    {
-        sum += list[i]->get_cost();
-    }
-
-    for( i=0; i<map->buildings.size(); ++i )
-    {
-        for( size_t j=0; j<list.size(); ++j )
-        {
-            if( list[j]->in_range( map->buildings[i] ) )
-            {
-                sum -= map->buildings[i]->profit();
-                break;
-            }
-        }
-    }
-
-    return( sum );
 }
 
 bool pSolution::equals( pSolution * s )
 {
     P_ASSERT( s != NULL, "empty argument" );
 
-    if( s->list.size() != list.size() ) return( false );
+    if( s->size != size ) return( false );
 
-    for( size_t i=0; i<list.size(); ++i )
+    for( int i=0; i<size; ++i )
     {
-        if( !list[i]->equals( s->list[i] ) )
+        if( vec[i] != s->vec[i] )
         {
             return( false );
         }
     }
 
     return( true );
-}
-
-int pSolution::not_null()
-{
-    size_t size;
-    int cnt = 0;
-    size = list.size();
-    for( size_t i=0; i<size; ++i )
-    {
-        if( list[i]->get_type() != 0 ) cnt++;
-    }
-    return( cnt );
 }
 

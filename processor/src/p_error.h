@@ -10,6 +10,7 @@
 #endif
 
 #include <string>
+#include <vector>
 
 class pException
 {
@@ -26,6 +27,20 @@ public:
 private:
     int line;
     std::string msg, exp, file;
+};
+
+class pErrorMgr
+{
+public:
+    static void report( const char * error_msg );
+    static void print();
+    static std::vector<char*> list;
+};
+
+class pError
+{
+public:
+    pError( const char * err_msg, ... );
 };
 
 #endif // __P_ERROR_H__

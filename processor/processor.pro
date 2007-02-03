@@ -10,9 +10,9 @@ INCLUDEPATH += . src
 OBJECTS_DIR = obj
 
 # Input
-HEADERS += src/p_parser.h src/p_output.h src/p_utils.h src/p_building.h src/p_transmitter.h \
-           src/p_cost_mgr.h src/p_map_loader_base.h src/p_error.h src/p_map_loader_txt.h \
-           src/p_solution.h src/p_tabu_search.h src/p_neighborhood.h src/p_move.h
-SOURCES += src/p_main.cpp src/p_parser.cpp src/p_output.cpp src/p_utils.cpp src/p_building.cpp \
-           src/p_transmitter.cpp src/p_cost_mgr.cpp src/p_map_loader_txt.cpp src/p_solution.cpp \
-           src/p_tabu_search.cpp src/p_neighborhood.cpp src/p_move.cpp
+HEADERS += src/p_output.h src/p_utils.h src/p_cost_mgr.h src/p_error.h \
+           src/p_solution.h src/p_tabu_search.h src/p_neighborhood.h src/p_move.h src/p_cfg_mgr.h \
+           src/p_app.h src/p_object.h
+SOURCES += src/p_main.cpp src/p_output.cpp src/p_utils.cpp src/p_cost_mgr.cpp \
+           src/p_solution.cpp src/p_tabu_search.cpp src/p_neighborhood.cpp src/p_move.cpp \
+           src/p_cfg_mgr.cpp src/p_app.cpp src/p_error.cpp
