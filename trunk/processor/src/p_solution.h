@@ -1,11 +1,6 @@
 #ifndef __P_SOLUTION_H__
 #define __P_SOLUTION_H__
 
-#include <vector>
-#include "p_transmitter.h"
-#include "p_map.h"
-
-/// solution object
 class pSolution
 {
 public:
@@ -14,13 +9,11 @@ public:
     pSolution( pSolution & rhs );
     virtual ~pSolution();
 
-    float penalty( pMap * map ); /// goal function, returns costs
     bool equals( pSolution * s );
     void release();
-    void init_random( pMap * map );
-    int  not_null();
 
-    std::vector<pTransmitter*> list;
+    int * vec;
+    int   size;
 };
 
 #endif // __P_SOLUTION_H__

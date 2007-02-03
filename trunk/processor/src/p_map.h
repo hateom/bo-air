@@ -2,18 +2,25 @@
 #define __P_MAP_H__
 
 #include <vector>
-#include "p_building.h"
-#include "p_transmitter.h"
+#include "p_solution.h"
+#include "p_object.h"
 
 class pMap
 {
 public:
-    pMap() {}
-    ~pMap() {}
+    pMap();
+    ~pMap();
 
+    int  load( const char * filename );
+    void free();
 
-    std::vector<pBuilding*> buildings;
-    std::vector<pTransmitter*> transmitters;
+    int  solution_size();
+    int  eval( pSolution * sol );
+
+protected:
+    std::vector<p_object*> building;
+    std::vector<p_object*> transmitter;
+    int   w, h;
 };
 
 #endif // __P_MAP_H__
