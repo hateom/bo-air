@@ -20,6 +20,7 @@ public class Exectuor_Thread_Menager {
 	private boolean halted = false;
 	private Process proces;
 	private String filename, prog_name, params;
+	private int k_val;
 	
 	public Exectuor_Thread_Menager( MainWindow okno){
 		this.okno = okno;
@@ -29,11 +30,12 @@ public class Exectuor_Thread_Menager {
 		} else{
 			prog_name = "./processor";
 		}
+		k_val = 45;
 	}
 	
 	
 	public synchronized void start_thread(){
-		params = "--K=45";
+		params = "--K="+k_val;
 /*
 K - iteracje
 T - żywotność elementu na liście TABU
@@ -111,6 +113,10 @@ T - żywotność elementu na liście TABU
 	
 	public int getMaxVal(){
 		return best_solution;
+	}
+	
+	public void setKval( int value ){
+		k_val = value;
 	}
 	// taka struktura zeby uniknac bledow  Interrupted attempt to aquire write lock..
 	public void print_debug_info( final String text ) {

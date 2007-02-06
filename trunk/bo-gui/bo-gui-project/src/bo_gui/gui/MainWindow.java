@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -19,15 +20,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import bo_gui.executor.ProcessorExecutor;
 import bo_gui.executor.SolutionStruct;
 
-public class MainWindow{
+public class MainWindow
+			implements ChangeListener
+{
+	static final int K_MIN = 1;
+	static final int K_MAX = 51;
+	static final int K_INIT = 20; 
 	
 	private JScrollPane scroll_pane;
 	
@@ -98,6 +107,28 @@ public class MainWindow{
 		StartButton.addActionListener(ActionListener);
 		
 		right_panel.lf();
+		
+		JLabel k_label = new JLabel("Ilosc iteracji (k)");
+		right_panel.doloz(k_label);
+		
+		JSlider K_slider = new JSlider(JSlider.HORIZONTAL, K_MIN, K_MAX, K_INIT);
+		//K_slider.setMajorTickSpacing(10);
+        K_slider.setMinorTickSpacing(5);
+		K_slider.setPaintTicks(true);
+		K_slider.setPaintLabels(true);
+		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+		labelTable.put( new Integer( 1 ), new JLabel("1") );
+		labelTable.put( new Integer( 10 ), new JLabel("10") );
+		labelTable.put( new Integer( 20 ), new JLabel("20") );
+		labelTable.put( new Integer( 30 ), new JLabel("30") );
+		labelTable.put( new Integer( 40 ), new JLabel("40") );
+		labelTable.put( new Integer( 50 ), new JLabel("50") );
+		K_slider.setLabelTable( labelTable );
+		K_slider.addChangeListener(this);
+		right_panel.doloz(K_slider);
+		
+		right_panel.lf();
+		
 		JLabel text_pane_label = new JLabel("Console");
 		right_panel.doloz(text_pane_label);
 		
@@ -149,6 +180,11 @@ public class MainWindow{
 		}
 		return file;
 	}
+	
+	public void stateChanged(ChangeEvent e) {
+        JSlider source = (JSlider)e.getSource();
+        menager.setKval(source.getValue());
+    }
 	
 	public class JButtonListener implements ActionListener{
 		
