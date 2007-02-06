@@ -35,38 +35,37 @@ int pTabuSearch::init()
     return 0;
 }
 
-void pTabuSearch::improve_sol()
+float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, bool f )
 {
-    s_temp = s_a;
+    float q_temp;
     
-    if( z % 3 == 0 )
+    if( ink % 3 == 0 )
     {
-        s_temp.swap( i, j );
-        s_temp.inc( i, j );
+        in->swap( i, j );
+        in->inc( i, j );
     }
-    else if( z % 4 == 0 )
+    else if( ink % 4 == 0 )
     {
-        s_temp.swap( i, j );
-        s_temp.dec( i, j );
+        in->swap( i, j );
+        in->dec( i, j );
     }
-    else if ( z % 5 == 0 )
+    else if ( ink % 5 == 0 )
     {
-        s_temp.dec( i, j );
+        in->dec( i, j );
     }
     else
     {
-        s_temp.swap( i, j );
+        in->swap( i, j );
     }
-    q_temp = Map->eval( &s_temp );
-    q_temp += (float)( (p_ALPHA*long_list( i, j ))/(z+1) );
-    if( q_temp < q_min ) 
+    
+    q_temp = Map->eval( in );
+    
+    if( ink > 0 && f )
     {
-        q_min = q_temp;
-        ip = i;
-        jp = j;
-        s_p = s_temp;
-        pOut->print( "// better PI( i*, j* ) //\n" );
+        q_temp += (float)( (p_ALPHA*long_list( i, j ))/ink );
     }
+
+    return q_temp;
 }
 
 int pTabuSearch::exec()
@@ -74,7 +73,7 @@ int pTabuSearch::exec()
     pSolution s_a( ssize ), s_min( ssize ), s_temp( ssize ), s_temp2( ssize ), 
               s_p( ssize ), s_pp( ssize ), s_prev( ssize );
 
-    float Q_min, q_min, q_min2, q_temp, q_temp2;
+    float Q_min, q_min, q_min2, qt;
     bool ch = false;
     size_t ip = 0, jp = 1, ipp = 0, jpp = 1;
 
@@ -91,6 +90,7 @@ int pTabuSearch::exec()
         while( true )
         {
             ++z;
+            s_temp = s_a;
             for( size_t j=0; j<ssize; ++j )
             {
                 for( size_t i=j; i<ssize; ++i )
@@ -98,7 +98,7 @@ int pTabuSearch::exec()
                     if( short_list( i, j ) == 0 )
                     {
                         // PI( i*, j* )
-
+/*
                         s_temp = s_a;
                         if( z % 3 == 0 )
                         {
@@ -129,11 +129,19 @@ int pTabuSearch::exec()
                             s_p = s_temp;
                             pOut->print( "// better PI( i*, j* ) //\n" );
                         }
+*/
+                        if( (qt = improve_sol( &s_temp, i, j, z )) < q_min )
+                        {
+                            q_min = qt;
+                            ip = i;
+                            jp = j;
+                            s_p = s_temp;
+                        }
                     }
                     else if( short_list( i, j ) > 0 )
                     {
                         // PI( i', j' )
-
+/*
                         s_temp2 = s_a;
                         if( k % 9 == 0 )
                         {
@@ -157,6 +165,14 @@ int pTabuSearch::exec()
                             jpp = j;
                             s_pp = s_temp2;
                             pOut->print( "// better PI( i', j' ) //\n" );
+                        }
+*/
+                        if( (qt = improve_sol( &s_temp, i, j, z, false )) < q_min2 )
+                        {
+                            q_min2 = qt;
+                            ipp = i;
+                            jpp = j;
+                            s_pp = s_temp;
                         }
                     }
                 }

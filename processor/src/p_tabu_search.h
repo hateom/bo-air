@@ -20,7 +20,7 @@ public:
     void decrease_short_list();
 
 protected:
-    void improve_sol();
+    float improve_sol( pSolution * in, size_t i, size_t j, size_t ink, bool f = true );
 
     int * tabu_list;
     size_t ssize;
