@@ -1,23 +1,26 @@
+#include <cstdlib>
+#include <ctime>
 #include "p_app.h"
 #include "p_error.h"
 
 int main( int argc, char * argv[] )
 {
+    pApp app;
+
+    srand( time(NULL) );
+
     try
     {
-        pApp app;
-
-        if( !app.init( argc, argv ) )
+        if( app.init( argc, argv ) != 0 )
         {
             pError( ">> initialization failed!" );
-            return -1;
+            throw pNull();
         }
 
-        if( !app.run() )
+        if( app.run() != 0 )
         {
             pError( ">> app.run() error!" );
-            app.free();
-            return -2;
+            throw pNull();
         }
 
         app.free();
@@ -26,10 +29,14 @@ int main( int argc, char * argv[] )
     {
         pErrorMgr::print();
         e.show();
-        return -3;
+        return -1;
     }
-
-    pErrorMgr::print();
+    catch( pNull & p )
+    {
+        pErrorMgr::print();
+        app.free();
+        return -2;
+    }
 
     return 0;
 }

@@ -29,6 +29,8 @@ private:
     std::string msg, exp, file;
 };
 
+class pNull {};
+
 class pErrorMgr
 {
 public:

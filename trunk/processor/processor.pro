@@ -9,10 +9,13 @@ INCLUDEPATH += . src
 
 OBJECTS_DIR = obj
 
+CONFIG -= release
+CONFIG  += qt warn_on debug exceptions stl
+
 # Input
 HEADERS += src/p_output.h src/p_utils.h src/p_cost_mgr.h src/p_error.h \
            src/p_solution.h src/p_tabu_search.h src/p_neighborhood.h src/p_move.h src/p_cfg_mgr.h \
-           src/p_app.h src/p_object.h
+           src/p_app.h src/p_object.h src/p_map.h
 SOURCES += src/p_main.cpp src/p_output.cpp src/p_utils.cpp src/p_cost_mgr.cpp \
            src/p_solution.cpp src/p_tabu_search.cpp src/p_neighborhood.cpp src/p_move.cpp \
-           src/p_cfg_mgr.cpp src/p_app.cpp src/p_error.cpp
+           src/p_cfg_mgr.cpp src/p_app.cpp src/p_error.cpp src/p_map.cpp src/p_object.cpp

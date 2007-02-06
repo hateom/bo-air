@@ -1,26 +1,26 @@
 #include "p_cost_mgr.h"
 
-namespace pCostMgr
+namespace pc
 {
 
-static float g_transmitter_cost[P_TRANS_TYPES+1] =  { 0.0f, 100.0f, 180.0f, 245.0f };
-static float g_transmitter_range[P_TRANS_TYPES+1] = { 0.0f, 5.0f, 9.0f, 15.0f };
-
-float get_transmitter_cost( int type )
+float transmitter_cost( int type )
 {
-    if( type < 0 || type >= P_TRANS_TYPES ) return( -1.0f );
-    return( g_transmitter_cost[type] );
+    return( (float)type*1000.f - (float)(type*type*20) );
 }
 
-float get_transmitter_range( int type )
+float transmitter_range( int type )
 {
-    if( type < 0 || type >= P_TRANS_TYPES ) return( -1.0f );
-    return( g_transmitter_range[type] );
+    return( type*5.0f );
 }
 
-float get_person_profit()
+float building_profit( int building )
 {
-    return( 30.0 );
+    return( (float)building*10.0f*30.0f );
+}
+
+int transmitter_type_count()
+{
+    return 4;
 }
 
 }
