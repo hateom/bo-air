@@ -24,10 +24,13 @@ pTabuSearch::~pTabuSearch()
 int pTabuSearch::exec()
 {
     ssize = Map->solution_size();
+    pOut->print( ">> allocating tabu-list... " );
     create_tl( ssize );
+    pOut->print( "OK\n" );
 
     pSolution s_a( ssize ), s_min( ssize ), s_temp( ssize ), s_temp2( ssize ), 
-              s_p( ssize ), s_pp( ssize ), s_prev;
+              s_p( ssize ), s_pp( ssize ), s_prev( ssize );
+
     float Q_min, q_min, q_min2, q_temp, q_temp2;
     bool ch = false;
     size_t ip = 0, jp = 1, ipp = 0, jpp = 1;
@@ -36,7 +39,10 @@ int pTabuSearch::exec()
     CFG_GET( "T",     p_T,     def_T );
     CFG_GET( "APLHA", p_ALPHA, def_ALPHA );
 
-    s_a.init( pc::transmitter_type_count() );
+    pOut->print( ">> initializing startup solution... " );
+    s_a.init( pc::transmitter_type_count(), Map->building_count() );
+    pOut->print( "OK\n" );
+    fflush( stdout );
 
     s_min = s_a;
     s_prev = s_min;

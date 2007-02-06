@@ -21,7 +21,7 @@ public:
 
 //    pSolution * copy(); 
 
-    void init( int max_value );
+    void init( int max_value, int building_cnt = 0 );
     bool equals( pSolution * s );
     void release();
 

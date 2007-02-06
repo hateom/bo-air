@@ -19,6 +19,7 @@ public:
     void free();
 
     size_t  solution_size();
+    size_t  building_count();
     float   eval( pSolution * sol );
 
 protected:
