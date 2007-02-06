@@ -10,6 +10,7 @@ public:
     pTabuSearch();
     virtual ~pTabuSearch();
 
+    int  init();
     int  exec();
     void free();
 
@@ -19,6 +20,8 @@ public:
     void decrease_short_list();
 
 protected:
+    void improve_sol();
+
     int * tabu_list;
     size_t ssize;
     int p_K, p_T, p_ALPHA;
