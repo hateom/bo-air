@@ -68,6 +68,7 @@ void pSolution::init( int max_value, int bc )
     {
         int rnd;
         memset( vec, 0, size*sizeof(int) );
+        if ( bc > size ) bc = size;
         for( int i=0; i<bc; ++i )
         {
             while( vec[rnd = rand()%size] );
