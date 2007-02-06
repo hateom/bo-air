@@ -69,7 +69,7 @@ public class MapImageBuilder {
 			
 			g.fillRect(x*box_w, y*box_h, box_w, box_h);
 			//g.fillArc(x, y, width, height, startAngle, arcAngle)
-			g.setColor( new Color( 0, 1.0f-(float)(typ/4) , 0, 0.1f) );
+			g.setColor( new Color( 0, 0.8f, 0, 0.1f) );
 			g.fillOval(x*box_w-5*typ*box_w/2+box_w/2, y*box_h-5*typ*box_h/2+box_h/2, 5*typ*box_w, 5*typ*box_h);
 			//System.out.println(solution.transmitter.get(i).index + ":"+ solution.transmitter.get(i).type);
 		}
