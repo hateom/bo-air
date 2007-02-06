@@ -8,7 +8,7 @@
 
 #define CFG_GET( PARAM, VAR, DEF ) if( !pCfgMgr::get_int( PARAM, &VAR )) { VAR = DEF; }
 
-#define def_K 100
+#define def_K 35
 #define def_T 5
 #define def_ALPHA 2
 
@@ -26,7 +26,8 @@ int pTabuSearch::exec()
     ssize = Map->solution_size();
     create_tl( ssize );
 
-    pSolution s_a( ssize ), s_min( ssize ), s_temp( ssize ), s_temp2( ssize ), s_p( ssize ), s_pp( ssize );
+    pSolution s_a( ssize ), s_min( ssize ), s_temp( ssize ), s_temp2( ssize ), 
+              s_p( ssize ), s_pp( ssize ), s_prev;
     float Q_min, q_min, q_min2, q_temp, q_temp2;
     bool ch = false;
     size_t ip = 0, jp = 1, ipp = 0, jpp = 1;
@@ -38,15 +39,20 @@ int pTabuSearch::exec()
     s_a.init( pc::transmitter_type_count() );
 
     s_min = s_a;
+    s_prev = s_min;
     Q_min = Map->eval( &s_a );
     q_min = q_min2 = Q_min;
     s_p = s_min;
     s_pp = s_min;
 
-    for( size_t z=0; z<3; ++z )
-    {
-        for( size_t k=0; k<p_K; ++k )
+//    for( size_t z=0; z<3; ++z )
+//    {
+    int z = 0;
+    size_t k = 0;
+//        for( size_t k=0; k<p_K; ++k )
+        while( true )
         {
+            ++z;
             for( size_t j=0; j<ssize; ++j )
             {
                 for( size_t i=j; i<ssize; ++i )
@@ -56,14 +62,20 @@ int pTabuSearch::exec()
                         // PI( i*, j* )
 
                         s_temp = s_a;
-                        if( k % 3 == 0 )
+                        if( z % 3 == 0 )
                         {
+                            s_temp.swap( i, j );
                             s_temp.inc( i, j );
                         }
-                        else if( k % 4 == 0 )
+                        else if( z % 4 == 0 )
+                        {
+                            s_temp.swap( i, j );
+                            s_temp.dec( i, j );
+                        }
+                        else if ( z % 5 == 0 )
                         {
                             s_temp.dec( i, j );
-                        }                        
+                        }
                         else
                         {
                             s_temp.swap( i, j );
@@ -148,14 +160,29 @@ int pTabuSearch::exec()
                 long_list( ipp, jpp ) += 1;
             }
     
+            if( s_min == s_prev )
+            {
+                k++;
+                if( k >= p_K )
+                {
+                    break;
+                }
+            }
+            else
+            {
+                k = 0;
+            }
+            s_prev = s_min;
+
             pOut->print( "z(%d):k=%003d>> Q_min: %2.2f { ", z, k, Q_min );
             for( size_t s=0; s<ssize; ++s )
             {
                 pOut->print( "%d ", s_min.vec[s] );
             }
             pOut->print( "}\n" );
+
         }
-    }
+//    }
 
     return 0;
 }
