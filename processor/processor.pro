@@ -10,7 +10,7 @@ LIB =
 
 OBJECTS_DIR = obj
 
-CONFIG = release
+CONFIG = release stl exceptions
 #CONFIG  += qt warn_on debug exceptions stl
 
 # Input
