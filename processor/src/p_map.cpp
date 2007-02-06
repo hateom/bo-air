@@ -105,6 +105,7 @@ float pMap::eval( pSolution * sol )
     {
         for( size_t i=0; i<sol->size; ++i )
         {
+            if( sol->vec[i] == 0 ) continue;
             if( po::in_range( transmitter[i], building[j], pc::transmitter_range( sol->vec[i] ) ) )
             {
                 result -= pc::building_profit( building[j]->data );
@@ -119,5 +120,10 @@ float pMap::eval( pSolution * sol )
 size_t pMap::solution_size()
 {
     return transmitter.size();
+}
+
+size_t pMap::building_count()
+{
+    return building.size();
 }
 

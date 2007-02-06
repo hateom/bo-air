@@ -53,13 +53,26 @@ void pSolution::release()
     }
 }
 
-void pSolution::init( int max_value )
+void pSolution::init( int max_value, int bc )
 {
     if( !size ) return;
 
-    for( size_t i=0; i<size; ++i )
+    if( bc == 0 )
     {
-        vec[i] = rand()%(max_value+1);
+        for( size_t i=0; i<size; ++i )
+        {
+            vec[i] = rand()%(max_value+1);
+        }
+    }
+    else
+    {
+        int rnd;
+        memset( vec, 0, size*sizeof(int) );
+        for( int i=0; i<bc; ++i )
+        {
+            while( vec[rnd = rand()%size] );
+            vec[rnd] = (rand()%max_value)+1;
+        }
     }
 }
 
