@@ -173,13 +173,23 @@ int pTabuSearch::exec()
                 k = 0;
             }
             s_prev = s_min;
-
+/*
             pOut->print( "z(%d):k=%003d>> Q_min: %2.2f { ", z, k, Q_min );
             for( size_t s=0; s<ssize; ++s )
             {
                 pOut->print( "%d ", s_min.vec[s] );
             }
             pOut->print( "}\n" );
+*/
+            pOut->printa( "%3.3f;", -Q_min );
+            for( size_t s=0; s<ssize; ++s )
+            {
+                if( s_min.vec[s] != 0 )
+                {
+                    pOut->printa( "%d:%d;", s, s_min.vec[s] );
+                }
+            }
+            pOut->printa( "\n" );
 
         }
 //    }
