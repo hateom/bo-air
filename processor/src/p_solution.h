@@ -16,6 +16,9 @@ public:
     pSolution & dec( int i, int j );
     pSolution & inc( int i, int j );
 
+    bool operator==( pSolution & rhs );
+    bool operator!=( pSolution & rhs ) { return !operator==(rhs); }
+
 //    pSolution * copy(); 
 
     void init( int max_value );

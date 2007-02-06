@@ -38,6 +38,11 @@ pSolution::~pSolution()
     release();
 }
 
+bool pSolution::operator==( pSolution & rhs )
+{
+    return equals( &rhs );
+}
+
 void pSolution::release()
 {
     if( size )
@@ -63,17 +68,20 @@ bool pSolution::equals( pSolution * s )
     P_ASSERT( s != NULL, "empty argument" );
     P_ASSERT( vec != NULL, "empty solution" );
 
-    if( s->size != size ) return( false );
+    if( s->size != size )
+    {
+        return false;
+    }
 
     for( unsigned int i=0; i<size; ++i )
     {
         if( vec[i] != s->vec[i] )
         {
-            return( false );
+            return false;
         }
     }
 
-    return( true );
+    return true;
 }
 
 pSolution & pSolution::swap( int i, int j )
@@ -120,6 +128,7 @@ pSolution & pSolution::operator=( pSolution & sol )
         vec = new int[sol.size];
     }
 
+    size = sol.size;
     memcpy( vec, sol.vec, sizeof(int)*size );
 
     return( *this );
