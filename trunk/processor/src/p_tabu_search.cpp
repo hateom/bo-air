@@ -4,10 +4,13 @@
 #include "p_output.h"
 #include "p_map.h"
 #include "p_cost_mgr.h"
+#include "p_cfg_mgr.h"
 
-#define K 100
-#define T 5
-#define ALPHA 2
+#define CFG_GET( PARAM, VAR, DEF ) if( !pCfgMgr::get_int( PARAM, &VAR )) { VAR = DEF; }
+
+#define def_K 100
+#define def_T 5
+#define def_ALPHA 2
 
 pTabuSearch::pTabuSearch() : tabu_list(NULL), ssize(0)
 {
@@ -28,6 +31,10 @@ int pTabuSearch::exec()
     bool ch = false;
     size_t ip = 0, jp = 1, ipp = 0, jpp = 1;
 
+    CFG_GET( "K",     p_K,     def_K );
+    CFG_GET( "T",     p_T,     def_T );
+    CFG_GET( "APLHA", p_ALPHA, def_ALPHA );
+
     s_a.init( pc::transmitter_type_count() );
 
     s_min = s_a;
@@ -38,7 +45,7 @@ int pTabuSearch::exec()
 
     for( size_t z=0; z<3; ++z )
     {
-        for( size_t k=0; k<K; ++k )
+        for( size_t k=0; k<p_K; ++k )
         {
             for( size_t j=0; j<ssize; ++j )
             {
@@ -51,18 +58,18 @@ int pTabuSearch::exec()
                         s_temp = s_a;
                         if( k % 3 == 0 )
                         {
-                            s_temp2.inc( i, j );
+                            s_temp.inc( i, j );
                         }
                         else if( k % 4 == 0 )
                         {
-                            s_temp2.dec( i, j );
+                            s_temp.dec( i, j );
                         }                        
                         else
                         {
-                            s_temp2.swap( i, j );
+                            s_temp.swap( i, j );
                         }
                         q_temp = Map->eval( &s_temp );
-                        q_temp += (float)( (ALPHA*long_list( i, j ))/(k+1) );
+                        q_temp += (float)( (p_ALPHA*long_list( i, j ))/(k+1) );
 
 //                        pOut->print( "// PI( i*, j* ) %2.2f - %2.2f //\n", q_temp, q_min );
     
@@ -132,12 +139,12 @@ int pTabuSearch::exec()
             decrease_short_list();
             if( ch == false )
             {
-                short_list( ip, jp ) = T;
+                short_list( ip, jp ) = p_T;
                 long_list( ip, jp ) += 1;
             }
             else
             {
-                short_list( ipp, jpp ) = T;
+                short_list( ipp, jpp ) = p_T;
                 long_list( ipp, jpp ) += 1;
             }
     

@@ -21,6 +21,7 @@ public:
 protected:
     int * tabu_list;
     size_t ssize;
+    int p_K, p_T, p_ALPHA;
 };
 
 #endif // __P_TABU_SEARCH_H__
