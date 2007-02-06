@@ -33,7 +33,12 @@ public class Exectuor_Thread_Menager {
 	
 	
 	public synchronized void start_thread(){
-		params = "";
+		params = "--K=45";
+/*
+K - iteracje
+T - żywotność elementu na liście TABU
+
+**/
 		boolean error = !(new File(prog_name).exists());
 			if (error){
 				print_debug_info("[M]No executor file, opening dialog");
