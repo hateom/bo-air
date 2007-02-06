@@ -4,13 +4,14 @@
 
 TEMPLATE = app
 TARGET = ../bin/processor
-DEPENDPATH += . src
-INCLUDEPATH += . src
+DEPENDPATH = . src
+INCLUDEPATH = . src
+LIB = 
 
 OBJECTS_DIR = obj
 
-CONFIG -= release
-CONFIG  += qt warn_on debug exceptions stl
+CONFIG = release
+#CONFIG  += qt warn_on debug exceptions stl
 
 # Input
 HEADERS += src/p_output.h src/p_utils.h src/p_cost_mgr.h src/p_error.h \
