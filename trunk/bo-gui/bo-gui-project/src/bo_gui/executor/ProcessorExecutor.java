@@ -47,9 +47,10 @@ public class ProcessorExecutor implements Runnable{
 
 			Process process = null;
 			command.add(program_name);
-			command.add("-s");
+			command.add("--silent=1");
 			command.add(params);
-			command.add(inFile);
+			String file_param = new String ( "--input="+inFile );
+			command.add( file_param );
 			try { 
 				process = builder.start();
 				menager.setProcess(process);

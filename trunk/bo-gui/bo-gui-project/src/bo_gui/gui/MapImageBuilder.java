@@ -83,7 +83,7 @@ public class MapImageBuilder {
 						//g.fillRect(i*box_w, u*box_h, box_w, box_h);
 						lista_pol.add(u*map_width+i);
 					}
-					else if(linie_list.get(u).charAt(i) == '+'){
+					else if((linie_list.get(u).charAt(i) >= 'a') && (linie_list.get(u).charAt(i) <= 'z') ){
 						g.setColor(Color.GRAY);
 						g.fillRect(i*box_w, u*box_h, box_w, box_h);
 					}
