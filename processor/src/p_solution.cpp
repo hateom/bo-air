@@ -90,14 +90,14 @@ pSolution & pSolution::swap( int i, int j )
 pSolution & pSolution::inc( int i, int j )
 {
     if( vec[i] < pc::transmitter_type_count()-1 ) vec[i]++;
-    if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
+//    if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
     return *this;
 }
 
 pSolution & pSolution::dec( int i, int j )
 {
     if( vec[i] > 0 ) vec[i]--;
-    if( vec[j] > 0 ) vec[j]--;
+//    if( vec[j] > 0 ) vec[j]--;
     return *this;
 }
 
