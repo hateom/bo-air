@@ -21,13 +21,56 @@ pTabuSearch::~pTabuSearch()
     free();
 }
 
-int pTabuSearch::exec()
+int pTabuSearch::init()
 {
     ssize = Map->solution_size();
     pOut->print( ">> allocating tabu-list... " );
     create_tl( ssize );
     pOut->print( "OK\n" );
 
+    CFG_GET( "K",     p_K,     def_K );
+    CFG_GET( "T",     p_T,     def_T );
+    CFG_GET( "APLHA", p_ALPHA, def_ALPHA );
+
+    return 0;
+}
+
+void pTabuSearch::improve_sol()
+{
+    s_temp = s_a;
+    
+    if( z % 3 == 0 )
+    {
+        s_temp.swap( i, j );
+        s_temp.inc( i, j );
+    }
+    else if( z % 4 == 0 )
+    {
+        s_temp.swap( i, j );
+        s_temp.dec( i, j );
+    }
+    else if ( z % 5 == 0 )
+    {
+        s_temp.dec( i, j );
+    }
+    else
+    {
+        s_temp.swap( i, j );
+    }
+    q_temp = Map->eval( &s_temp );
+    q_temp += (float)( (p_ALPHA*long_list( i, j ))/(z+1) );
+    if( q_temp < q_min ) 
+    {
+        q_min = q_temp;
+        ip = i;
+        jp = j;
+        s_p = s_temp;
+        pOut->print( "// better PI( i*, j* ) //\n" );
+    }
+}
+
+int pTabuSearch::exec()
+{
     pSolution s_a( ssize ), s_min( ssize ), s_temp( ssize ), s_temp2( ssize ), 
               s_p( ssize ), s_pp( ssize ), s_prev( ssize );
 
@@ -35,27 +78,16 @@ int pTabuSearch::exec()
     bool ch = false;
     size_t ip = 0, jp = 1, ipp = 0, jpp = 1;
 
-    CFG_GET( "K",     p_K,     def_K );
-    CFG_GET( "T",     p_T,     def_T );
-    CFG_GET( "APLHA", p_ALPHA, def_ALPHA );
-
-    pOut->print( ">> initializing startup solution... " );
     s_a.init( pc::transmitter_type_count(), Map->building_count() );
-    pOut->print( "OK\n" );
-    fflush( stdout );
 
-    s_min = s_a;
-    s_prev = s_min;
-    Q_min = Map->eval( &s_a );
-    q_min = q_min2 = Q_min;
-    s_p = s_min;
-    s_pp = s_min;
+    // initialization
+    s_min = s_a; s_prev = s_min;
+    Q_min = Map->eval( &s_a ); q_min = q_min2 = Q_min;
+    s_p = s_min; s_pp = s_min;
 
-//    for( size_t z=0; z<3; ++z )
-//    {
     int z = 0;
     size_t k = 0;
-//        for( size_t k=0; k<p_K; ++k )
+
         while( true )
         {
             ++z;
@@ -87,10 +119,8 @@ int pTabuSearch::exec()
                             s_temp.swap( i, j );
                         }
                         q_temp = Map->eval( &s_temp );
-                        q_temp += (float)( (p_ALPHA*long_list( i, j ))/(k+1) );
+                        q_temp += (float)( (p_ALPHA*long_list( i, j ))/(z+1) );
 
-//                        pOut->print( "// PI( i*, j* ) %2.2f - %2.2f //\n", q_temp, q_min );
-    
                         if( q_temp < q_min ) 
                         {
                             q_min = q_temp;
@@ -120,8 +150,6 @@ int pTabuSearch::exec()
                         
                         q_temp2 = Map->eval( &s_temp2 );
 
-//                        pOut->print( "// PI( i', j' ) %2.2f - %2.2f //\n", q_temp2, q_min2 );
-
                         if( q_temp2 < q_min2 )
                         {
                             q_min2 = q_temp2;
@@ -135,9 +163,9 @@ int pTabuSearch::exec()
             }
 
             s_a = s_p;
-            if( Map->eval( &s_a ) < Q_min )
+            if( q_min < Q_min )
             {
-                Q_min = Map->eval( &s_a );
+                Q_min = q_min;
                 s_min = s_a;
             }
 
@@ -169,7 +197,7 @@ int pTabuSearch::exec()
             if( s_min == s_prev )
             {
                 k++;
-                if( k >= p_K )
+                if( k >= (size_t)p_K )
                 {
                     break;
                 }
@@ -179,14 +207,7 @@ int pTabuSearch::exec()
                 k = 0;
             }
             s_prev = s_min;
-/*
-            pOut->print( "z(%d):k=%003d>> Q_min: %2.2f { ", z, k, Q_min );
-            for( size_t s=0; s<ssize; ++s )
-            {
-                pOut->print( "%d ", s_min.vec[s] );
-            }
-            pOut->print( "}\n" );
-*/
+
             pOut->printa( "%3.3f;", -Q_min );
             for( size_t s=0; s<ssize; ++s )
             {
@@ -198,7 +219,6 @@ int pTabuSearch::exec()
             pOut->printa( "\n" );
 
         }
-//    }
 
     return 0;
 }
