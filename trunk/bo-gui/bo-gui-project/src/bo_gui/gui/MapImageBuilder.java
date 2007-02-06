@@ -48,20 +48,29 @@ public class MapImageBuilder {
 	
 	public BufferedImage CreateSolutionImage ( SolutionStruct  solution ){
 		Graphics2D g = image.createGraphics();
-		int x,y,u;
+		clear();
+		ParseLine();
+		int x,y,u,typ;
 		for(int i=0;i<solution.transmitter.size();i++){
 			u = lista_pol.get(solution.transmitter.get(i).index);
 			x = u % max_size;
 			y = u / max_size; //max_size == map_width
-			switch (solution.transmitter.get(i).type){
+			typ = solution.transmitter.get(i).type;
+			/*switch (solution.transmitter.get(i).type){
 				case 0 : g.setColor(Color.RED); break;
 				case 1 : g.setColor(Color.ORANGE); break;
 				case 2 : g.setColor(Color.GREEN); break;
 				case 3 : g.setColor(Color.PINK); break;
 				default : g.setColor(Color.BLUE); break;
+			
 			}
+			*/
+			g.setColor( Color.GREEN);
 			
 			g.fillRect(x*box_w, y*box_h, box_w, box_h);
+			//g.fillArc(x, y, width, height, startAngle, arcAngle)
+			g.setColor( new Color( 0, 1.0f-(float)(typ/4) , 0, 0.1f) );
+			g.fillOval(x*box_w-5*typ*box_w/2+box_w/2, y*box_h-5*typ*box_h/2+box_h/2, 5*typ*box_w, 5*typ*box_h);
 			//System.out.println(solution.transmitter.get(i).index + ":"+ solution.transmitter.get(i).type);
 		}
 		return image;
@@ -74,17 +83,22 @@ public class MapImageBuilder {
 			box_h=(int)(area_height/map_height);
 			Graphics2D g = image.createGraphics();
 			g.setColor(Color.BLACK);
+			char znaczek;
+			int numerek=0;
 			for(int u=0;u<map_height;u++){
 				for(int i=0;i<map_width;i++){
 					//System.out.println(i+" "+u);
-					if(linie_list.get(u).charAt(i) == ' ') {
+					znaczek = linie_list.get(u).charAt(i);
+					if(znaczek == ' ') {
 						g.setColor(Color.BLACK);
 						g.drawRect(i*box_w, u*box_h, box_w, box_h);
 						//g.fillRect(i*box_w, u*box_h, box_w, box_h);
 						lista_pol.add(u*map_width+i);
 					}
-					else if((linie_list.get(u).charAt(i) >= 'a') && (linie_list.get(u).charAt(i) <= 'z') ){
-						g.setColor(Color.GRAY);
+					else if((znaczek >= 'a') && ( znaczek <= 'z') ){
+						
+						numerek=123-(int)znaczek;
+						g.setColor( new Color( 100+5*numerek, 100+5*numerek, 100+5*numerek ) );
 						g.fillRect(i*box_w, u*box_h, box_w, box_h);
 					}
 				}
