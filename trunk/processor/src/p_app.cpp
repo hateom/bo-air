@@ -6,6 +6,7 @@
 #include "p_error.h"
 #include "p_map.h"
 #include "p_tabu_search.h"
+#include "p_cost_mgr.h"
 
 pApp::pApp()
 {
@@ -22,7 +23,7 @@ int pApp::init( int argc, char * argv[] )
 
     if( arg_valid( argc, argv ) != 0 ) 
     {
-        std::cout << "usage: " << argv[0] << " [args]\n\nargs:\n\t--input=<input_file>\n\t--silent={1,0}\n\n";
+        std::cout << "usage: " << argv[0] << " [args]\n\nargs:\n\t--input=<input_file>\n\t--silent={1,0}\n\t--config=CFG_FILE\n\t--K=x\t\t\tK parameter\n\t--T=x\t\t\tT parameter\n\t--ALPHA=x\t\talpha parameter\n\n";
         return -1;
     }
     if( parse_arg( argc, argv ) != 0 )
@@ -34,6 +35,20 @@ int pApp::init( int argc, char * argv[] )
     if( strcmp( pCfgMgr::get("silent"), "1" ) == 0 )
     {
         pOut->set_silent( true );
+    }
+
+    char * cfg;
+    cfg = (char*)pCfgMgr::get( "config" );
+    if( cfg != NULL && strcmp( cfg, "" ) )
+    {
+        if( pc::load( cfg ) != 0 )
+        {
+            pError( "could not load config file! <%s>", cfg );
+        }
+    }
+    else
+    {
+        pc::set_default();
     }
 
     ptr = (char*)pCfgMgr::get( "input" );

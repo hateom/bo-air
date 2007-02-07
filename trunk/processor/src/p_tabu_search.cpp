@@ -8,9 +8,9 @@
 
 #define CFG_GET( PARAM, VAR, DEF ) if( !pCfgMgr::get_int( PARAM, &VAR )) { VAR = DEF; }
 
-#define def_K 35
-#define def_T 5
-#define def_ALPHA 2
+#define def_K       35
+#define def_T        5
+#define def_ALPHA    2
 
 pTabuSearch::pTabuSearch() : tabu_list(NULL), ssize(0)
 {
@@ -24,7 +24,7 @@ pTabuSearch::~pTabuSearch()
 int pTabuSearch::init()
 {
     ssize = Map->solution_size();
-    pOut->print( ">> allocating tabu-list... " );
+    pOut->print( ">> allocating tabu-list... [%dx%d] ", ssize, ssize );
     create_tl( ssize );
     pOut->print( "OK\n" );
 
@@ -39,21 +39,25 @@ float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, 
 {
     float q_temp;
     
-    if( ink % 3 == 0 )
+    if( ink % 5 == 0 )
     {
         in->swap( i, j );
         in->inc( i, j );
     }
-    else if( ink % 4 == 0 )
+    else if( ink % 5 == 1 )
     {
         in->swap( i, j );
         in->dec( i, j );
     }
-    else if ( ink % 5 == 0 )
+    else if ( ink % 5 == 2 )
     {
         in->dec( i, j );
     }
-    else
+    else if ( ink % 5 == 3 )
+    {
+        in->inc( i, j );
+    }
+    else // if( ink % 4 == 3 )
     {
         in->swap( i, j );
     }
@@ -81,6 +85,7 @@ int pTabuSearch::exec()
 
     // initialization
     s_min = s_a; s_prev = s_min;
+
     Q_min = Map->eval( &s_a ); q_min = q_min2 = Q_min;
     s_p = s_min; s_pp = s_min;
 
