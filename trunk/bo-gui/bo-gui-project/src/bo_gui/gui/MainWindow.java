@@ -46,14 +46,17 @@ public class MainWindow
 	protected Area_GraphArea graph;
 	protected JButton StartButton,OpenFileButton;
 	protected JFileChooser fc;
+	protected JButton configurationButton, aboutBtn;
+	protected ConfigurationWindow confWnd;
+	protected AboutWindow aboutWnd;
 	
 	public static final int Graphs_WIDTH = 500;
 	public static final int Graphs_HEIGHT = 300;
-	
 	public MainWindow(){
 		
 		menager = new Exectuor_Thread_Menager(this);
-		
+		confWnd = null;
+		aboutWnd = null;
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -108,6 +111,18 @@ public class MainWindow
 		StartButton = new JButton("Start!");
 		right_panel.doloz(StartButton);
 		StartButton.addActionListener(ActionListener);
+		
+		right_panel.lf();
+		
+		configurationButton = new JButton("Configuration");
+		configurationButton.addActionListener(ActionListener);
+		right_panel.doloz(configurationButton);
+		
+		right_panel.lf();
+		
+		aboutBtn = new JButton("About...");
+		aboutBtn.addActionListener(ActionListener);
+		right_panel.doloz(aboutBtn);
 		
 		right_panel.lf();
 		
@@ -197,16 +212,26 @@ public class MainWindow
 				menager.start_thread();
 			}
 			if (event.getSource() == OpenFileButton){
-					 File file = ShowOpenFilePopup("Open Map File");
-					 if (file!= null){
-						 menager.print_debug_info("[G]Opening file.."+file.getName());
-						 menager.setFileName(file.getAbsolutePath());
-						 map.DrawMap(file);
-					 }
+				File file = ShowOpenFilePopup("Open Map File");
+				if (file!= null){
+					menager.print_debug_info("[G]Opening file.."+file.getName());
+					menager.setFileName(file.getAbsolutePath());
+					map.DrawMap(file);
 				 }
-				 else {
-					 
-				 }
+			}
+			
+			if (event.getSource() == configurationButton){
+				if ( confWnd == null ) confWnd = new ConfigurationWindow(menager);
+				else confWnd.setVisible(true);
+			}
+			
+			if (event.getSource() == aboutBtn){
+				if ( aboutWnd == null ) aboutWnd = new AboutWindow();
+				else aboutWnd.setVisible(true);
+			}
+			else {
+				
+			}
 		}
 		
 	}
