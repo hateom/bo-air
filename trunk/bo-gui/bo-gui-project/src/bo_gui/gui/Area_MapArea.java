@@ -27,7 +27,7 @@ public class Area_MapArea extends JComponent{
 		this.okno = okno;
 		setBackground(Color.WHITE);
 		setOpaque(true);
-		Map_creator = new MapImageBuilder( 500,300 );//this.getWidth(), this.getHeight() );
+		Map_creator = new MapImageBuilder( MainWindow.Graphs_WIDTH, MainWindow.Graphs_HEIGHT );//this.getWidth(), this.getHeight() );
 	}
 	
 	public void DrawMap( File InputFile ){

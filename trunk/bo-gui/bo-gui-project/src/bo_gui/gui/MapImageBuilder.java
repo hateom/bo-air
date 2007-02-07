@@ -19,6 +19,7 @@ public class MapImageBuilder {
 	private int area_width, area_height,box_w,box_h;
 	private BufferedImage image;
 	private List<Integer> lista_pol;
+	private Color szary = new Color( 230, 230, 230 );
 	
 	public MapImageBuilder(int w, int h){
 		linie_list = new ArrayList<String>();
@@ -82,6 +83,21 @@ public class MapImageBuilder {
 			box_w =(int)(area_width/map_width);
 			box_h=(int)(area_height/map_height);
 			Graphics2D g = image.createGraphics();
+			/*
+			 * Rysowanie siatki
+			 */
+			g.setColor( szary );
+			for (int i=0;i<MainWindow.Graphs_WIDTH;i+=box_w){
+				g.drawLine(i, 0, i, MainWindow.Graphs_HEIGHT);
+			}
+			for (int u=0;u<MainWindow.Graphs_HEIGHT;u+=box_h){
+				g.drawLine(0, u, MainWindow.Graphs_WIDTH, u);
+			}
+			
+			/*
+			 * Rysowanie obszarow
+			 */
+			
 			g.setColor(Color.BLACK);
 			char znaczek;
 			int numerek=0;
