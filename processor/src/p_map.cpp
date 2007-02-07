@@ -109,7 +109,7 @@ float pMap::eval( pSolution * sol )
             if( po::in_range( transmitter[i], building[j], pc::transmitter_range( sol->vec[i] ) ) )
             {
                 result -= pc::building_profit( building[j]->data );
-                i = sol->size;
+                break;
             }
         }
     }
