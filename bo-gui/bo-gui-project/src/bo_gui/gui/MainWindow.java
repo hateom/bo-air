@@ -47,6 +47,9 @@ public class MainWindow
 	protected JButton StartButton,OpenFileButton;
 	protected JFileChooser fc;
 	
+	public static final int Graphs_WIDTH = 500;
+	public static final int Graphs_HEIGHT = 300;
+	
 	public MainWindow(){
 		
 		menager = new Exectuor_Thread_Menager(this);
@@ -145,18 +148,18 @@ public class MainWindow
 		
 		
 		map = new Area_MapArea(this);
-		map.setPreferredSize(new Dimension(500,300));
-		map.setMinimumSize(new Dimension(500,300));
-		map.setSize(new Dimension(500,300));
+		map.setPreferredSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
+		map.setMinimumSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
+		map.setSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
 		map.setToolTipText("Mapka");
 		left_panel.doloz(map);
 		
 		left_panel.lf();
 		
 		graph = new Area_GraphArea(this);
-		graph.setPreferredSize(new Dimension(500,300));
-		graph.setMinimumSize(new Dimension(500,300));
-		graph.setSize(new Dimension(500,300));
+		graph.setPreferredSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
+		graph.setMinimumSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
+		graph.setSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
 		graph.setToolTipText("Wykres funkcji celu");
 		left_panel.doloz(graph);
 		graph.clear();
@@ -166,6 +169,7 @@ public class MainWindow
 		//frame.setSize(900,600);
 		frame.setResizable(false);
 		frame.setVisible(true);
+		menager.print_debug_info("Current OS is : "+System.getProperty("os.name"));
 	}
 	
 	public File ShowOpenFilePopup(String title){

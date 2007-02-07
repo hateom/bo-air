@@ -17,14 +17,15 @@ public class Area_GraphArea extends JComponent{
 	private static final long serialVersionUID = 5153369237812057727L;
 	
 	private MainWindow okno;
-	private List<Integer> points;
+	private List<Float> points;
+	
 	private BufferedImage image;
 	
 	public Area_GraphArea(MainWindow okno){ 
 		this.okno = okno;
 		setBackground(Color.WHITE);
 		setOpaque(true);
-		image = new BufferedImage(500,300, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(MainWindow.Graphs_WIDTH,MainWindow.Graphs_HEIGHT, BufferedImage.TYPE_INT_RGB);
 	}
 	
 	
@@ -37,24 +38,53 @@ public class Area_GraphArea extends JComponent{
 	
 	public void setPoints( List<Float> points){
 		if (points != null && points.size() != 0){
-			
-			Dimension dims = this.getSize();
-			int h = getHeight(); 
-			int list_size = points.size();
+			this.points = points;
 			clear();
-			Graphics2D g = image.createGraphics();
-			g.setColor(Color.RED);
-			float yratio = getHeight()/points.get(okno.menager.getMaxVal());
-			float xratio = getWidth()/points.size();
-			for (int i=0;i<list_size-1;i++){
-				g.drawLine((int)(xratio*i),h-(int)(yratio*points.get(i)),(int)(xratio*(i+1)), h-(int)(yratio*points.get(i+1)));
-			}
-			this.repaint();
+			drawGrid();
+			drawGraph();
+			//Dimension dims = this.getSize();
+
 		}else
 		{
 			
 		}
 	}
+	
+	public void drawGrid(){
+		Graphics2D g = image.createGraphics();
+		g.setColor( Color.lightGray );
+		for (int i=0;i<MainWindow.Graphs_WIDTH;i+=50){
+			g.drawLine(i, 0, i, MainWindow.Graphs_HEIGHT);
+		}
+		for (int u=0;u<MainWindow.Graphs_HEIGHT;u+=50){
+			g.drawLine(0, u, MainWindow.Graphs_WIDTH, u);
+		}
+	}
+	
+	public void drawGraph(){
+		int h = getHeight(); 
+		int list_size = points.size();
+		int minimum_y= Integer.MAX_VALUE;
+		
+		Graphics2D g = image.createGraphics();
+		g.setColor(Color.RED);
+		
+		for (int i=0;i<list_size-1;i++){
+			if ( minimum_y > (int)(Math.abs(points.get(i))) ) minimum_y = (int)( Math.abs(points.get(i)) );
+		}
+		
+		//System.out.println(minimum_y);
+		//System.out.println( points.get(okno.menager.getMaxVal()) );
+		float yratio = (getHeight()-40)/( points.get(okno.menager.getMaxVal()) - minimum_y );
+		float xratio = getWidth()/points.size();
+		//float yratio2 = getHeight()/( points.get(okno.menager.getMaxVal()));
+		for (int i=0;i<list_size-1;i++){
+			g.drawLine((int)(xratio*i),h-20-(int)(yratio*(points.get(i)-minimum_y)),(int)(xratio*(i+1)), h-20-(int)(yratio*(points.get(i+1)-minimum_y)));
+			//g.drawLine((int)(xratio*i),h-(int)(yratio2*(points.get(i))),(int)(xratio*(i+1)), h-(int)(yratio2*(points.get(i+1))));
+		}
+		this.repaint();
+	}
+	
 
 	protected void paintComponent(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
