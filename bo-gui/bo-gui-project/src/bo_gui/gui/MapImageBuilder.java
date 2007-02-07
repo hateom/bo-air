@@ -80,8 +80,8 @@ public class MapImageBuilder {
 	private void ParseLine(){
 		if( !linie_list.isEmpty() ){
 			int map_width=max_size, map_height = linie_list.size();
-			box_w =(int)(area_width/map_width);
-			box_h=(int)(area_height/map_height);
+			box_w =(int)(MainWindow.Graphs_WIDTH/(map_width));
+			box_h=(int)(MainWindow.Graphs_HEIGHT/map_height);
 			Graphics2D g = image.createGraphics();
 			/*
 			 * Rysowanie siatki
@@ -113,7 +113,7 @@ public class MapImageBuilder {
 					}
 					else if((znaczek >= 'a') && ( znaczek <= 'z') ){
 						
-						numerek=123-(int)znaczek;
+						numerek='z' + 1-(int)znaczek;
 						g.setColor( new Color( 100+5*numerek, 100+5*numerek, 100+5*numerek ) );
 						g.fillRect(i*box_w, u*box_h, box_w, box_h);
 					}
