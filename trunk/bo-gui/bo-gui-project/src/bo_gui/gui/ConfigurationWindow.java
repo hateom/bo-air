@@ -1,8 +1,11 @@
 package bo_gui.gui;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +20,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 
 import bo_gui.gui.Exectuor_Thread_Menager;
-public class ConfigurationWindow extends JFrame {
+public class ConfigurationWindow extends JFrame 
+								implements ActionListener 
+{
 	/**
 	 * 
 	 */
@@ -28,9 +33,18 @@ public class ConfigurationWindow extends JFrame {
 	private JPanel panel2;
 	private JPanel panel3;
 	
-	private JButton openBtn, saveBtn, closeBtn, okBtn;
+	private JButton openBtn, saveBtn, closeBtn, okBtn, addBtn;
 
 	private List<JSpinner> buildings_edit_list;
+	private List<JSpinner> transmitter_range_list;
+	private List<JSpinner> transmitter_cost_list;
+	/*
+	 * do obliczania polozenia w gridbagu dla panelu2
+	 */
+	private int ypos=1,xpos=0,count=0;
+	private GridBagConstraints constr;
+	
+	
 	//private List<>
 	private JFileChooser fc_OpenSaveFile;
 	
@@ -39,10 +53,19 @@ public class ConfigurationWindow extends JFrame {
 		setSize( 600, 500 );
 		setVisible( true );
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		
+	
 		this.menager = menager;
+		
 		buildings_edit_list = new ArrayList<JSpinner>();
+		transmitter_cost_list = new ArrayList<JSpinner>();
+		transmitter_range_list = new ArrayList<JSpinner>();
+		
+		constr = new GridBagConstraints();
+		constr.fill = GridBagConstraints.HORIZONTAL;
+		constr.gridwidth = 1;
+		
 		fc_OpenSaveFile = new JFileChooser();
+		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		panel1 = new JPanel();
 		tabbedPane.addTab("Buildings", null, panel1,
@@ -61,8 +84,10 @@ public class ConfigurationWindow extends JFrame {
 		
 		add(tabbedPane);
 		panel1.setLayout( new GridBagLayout() );
+		
 		panel3.setLayout( new GridBagLayout() );
 		fillPanel1();
+		fillPanel2();
 		fillPanel3();
 	}
 	
@@ -97,7 +122,16 @@ public class ConfigurationWindow extends JFrame {
 	}
 	
 	public void fillPanel2(){
-		
+		//GridBagConstraints c = new GridBagConstraints();
+		constr.fill = GridBagConstraints.HORIZONTAL;
+		constr.gridwidth = 1;
+		constr.gridx = 0;
+		constr.gridy = 0;
+		addBtn = new JButton("Add transmitter");
+		panel2.setLayout(new BorderLayout());
+		panel2.add(addBtn, BorderLayout.NORTH);
+		addBtn.addActionListener(this);
+		panel2.setLayout( new GridBagLayout() );
 	}
 	
 	public void fillPanel3(){
@@ -136,5 +170,24 @@ public class ConfigurationWindow extends JFrame {
 			
 		}
 		return file;
+	}
+
+	public void actionPerformed(ActionEvent event) {
+		if ( event.getSource() == addBtn ){
+			JLabel lab = new JLabel(""+count);
+			constr.gridx = xpos;
+			constr.gridy = ypos;
+			
+			panel2.add( lab, constr );
+			this.repaint();
+			count++;
+			if( 25*ypos > 450 ){
+				ypos=1;
+				xpos+=5;
+			} else{
+				ypos++;
+			}
+			
+		}
 	}
 }
