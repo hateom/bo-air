@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import bo_gui.executor.SolutionStruct;
@@ -20,13 +21,16 @@ public class MapImageBuilder {
 	private BufferedImage image;
 	private List<Integer> lista_pol;
 	private Color szary = new Color( 230, 230, 230 );
+	private Exectuor_Thread_Menager menager;
+	private Float ratio;
 	
-	public MapImageBuilder(int w, int h){
+	public MapImageBuilder(int w, int h, Exectuor_Thread_Menager menager){
 		linie_list = new ArrayList<String>();
 		lista_pol = new ArrayList<Integer>();
 		area_height = h;
 		area_width = w;
 		image = new BufferedImage(w,h, BufferedImage.TYPE_INT_RGB);
+		this.menager =  menager;
 	}
 	public BufferedImage CreateMapImage( File InputFile ) throws IOException{
 		String temp;
@@ -40,6 +44,15 @@ public class MapImageBuilder {
 				linie_list.add(temp);
 				if ( temp.length() > max_size ) max_size = temp.length();  
 			}
+			List<Float> profit_list = menager.getOptTable().get("profit");
+			float maxval=0.0f;
+			
+			for ( int i = 0; i < profit_list.size(); i++ ){
+				if ( profit_list.get(i) > maxval ) maxval = profit_list.get(i);
+			}
+			
+			if ( maxval != 0 ) ratio = 255.0f/maxval;
+			
 			clear();
 			ParseLine();
 		}
@@ -71,7 +84,9 @@ public class MapImageBuilder {
 			g.fillRect(x*box_w, y*box_h, box_w, box_h);
 			//g.fillArc(x, y, width, height, startAngle, arcAngle)
 			g.setColor( new Color( 0, 0.8f, 0, 0.1f) );
-			g.fillOval(x*box_w-5*typ*box_w/2+box_w/2, y*box_h-5*typ*box_h/2+box_h/2, 5*typ*box_w, 5*typ*box_h);
+			int range = menager.getOptTable().get("range").get(typ).intValue();
+			
+			g.fillOval(x*box_w-range*box_w/2+box_w/2, y*box_h-range*box_h/2+box_h/2, range*box_w, range*box_h);
 			//System.out.println(solution.transmitter.get(i).index + ":"+ solution.transmitter.get(i).type);
 		}
 		return image;
@@ -113,8 +128,17 @@ public class MapImageBuilder {
 					}
 					else if((znaczek >= 'a') && ( znaczek <= 'z') ){
 						
+						/*
 						numerek='z' + 1-(int)znaczek;
 						g.setColor( new Color( 100+5*numerek, 100+5*numerek, 100+5*numerek ) );
+						}
+						*/
+						numerek = Math.abs(('a' - (int)znaczek));
+						if (numerek < 0 || numerek > menager.getOptTable().get("profit").size() ) numerek=0;
+						//System.out.println( numerek+" "+znaczek );
+						Float val = (float)255.0 - (ratio*menager.getOptTable().get("profit").get(numerek));
+						//System.out.println( numerek+" "+znaczek+ " "+val );
+						g.setColor( new Color (val.intValue(), val.intValue(), val.intValue()) );
 						g.fillRect(i*box_w, u*box_h, box_w, box_h);
 					}
 				}

@@ -215,7 +215,7 @@ public class MainWindow
 				File file = ShowOpenFilePopup("Open Map File");
 				if (file!= null){
 					menager.print_debug_info("[G]Opening file.."+file.getName());
-					menager.setFileName(file.getAbsolutePath());
+					menager.setFileName(file.getAbsolutePath(), file);
 					map.DrawMap(file);
 				 }
 			}
