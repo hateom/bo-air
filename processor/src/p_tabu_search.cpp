@@ -103,40 +103,9 @@ int pTabuSearch::exec()
                     if( short_list( i, j ) == 0 )
                     {
                         // PI( i*, j* )
-/*
-                        s_temp = s_a;
-                        if( z % 3 == 0 )
-                        {
-                            s_temp.swap( i, j );
-                            s_temp.inc( i, j );
-                        }
-                        else if( z % 4 == 0 )
-                        {
-                            s_temp.swap( i, j );
-                            s_temp.dec( i, j );
-                        }
-                        else if ( z % 5 == 0 )
-                        {
-                            s_temp.dec( i, j );
-                        }
-                        else
-                        {
-                            s_temp.swap( i, j );
-                        }
-                        q_temp = Map->eval( &s_temp );
-                        q_temp += (float)( (p_ALPHA*long_list( i, j ))/(z+1) );
-
-                        if( q_temp < q_min ) 
-                        {
-                            q_min = q_temp;
-                            ip = i;
-                            jp = j;
-                            s_p = s_temp;
-                            pOut->print( "// better PI( i*, j* ) //\n" );
-                        }
-*/
                         if( (qt = improve_sol( &s_temp, i, j, z )) < q_min )
                         {
+                            pOut->print( "improve i*, j* [k:%d=%2.2f]\n", k, qt );
                             q_min = qt;
                             ip = i;
                             jp = j;
@@ -146,34 +115,9 @@ int pTabuSearch::exec()
                     else if( short_list( i, j ) > 0 )
                     {
                         // PI( i', j' )
-/*
-                        s_temp2 = s_a;
-                        if( k % 9 == 0 )
-                        {
-                            s_temp2.inc( i, j );
-                        }
-                        else if( k % 7 == 0 )
-                        {
-                            s_temp2.dec( i, j );
-                        }                        
-                        else
-                        {
-                            s_temp2.swap( i, j );
-                        }
-                        
-                        q_temp2 = Map->eval( &s_temp2 );
-
-                        if( q_temp2 < q_min2 )
-                        {
-                            q_min2 = q_temp2;
-                            ipp = i;
-                            jpp = j;
-                            s_pp = s_temp2;
-                            pOut->print( "// better PI( i', j' ) //\n" );
-                        }
-*/
                         if( (qt = improve_sol( &s_temp, i, j, z, false )) < q_min2 )
                         {
+                            pOut->print( "improve i', j' [k:%d=%2.2f]\n", k, qt );
                             q_min2 = qt;
                             ipp = i;
                             jpp = j;
@@ -200,6 +144,7 @@ int pTabuSearch::exec()
                 ch = true;
                 pOut->print( "// aspiration //\n" );
             }
+            else ch = false;
 
             // memory correction
 
