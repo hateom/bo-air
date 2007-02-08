@@ -132,11 +132,13 @@ T - żywotność elementu na liście TABU
 			
 			for (int i=0; i<solution.size();i++ ){
 				results_list.add(solution.get(i).profit);
-				if (solution.get(i).profit > max_val) {
+				/*if (solution.get(i).profit > max_val) {
 					best_solution = i;
 					max_val = solution.get(i).profit;
-				}
+				
+				}*/
 			}
+			best_solution = solution.size()-1;
 			okno.graph.setPoints(results_list);
 			if ( results_list.size() != 0 ) okno.map.DrawSolution(solution.get(best_solution));
 		}
