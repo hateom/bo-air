@@ -38,7 +38,16 @@ public class MainWindow
 	static final int K_MAX = 51;
 	static final int K_INIT = 20; 
 	
+	static final int T_MIN = 1;
+	static final int T_MAX = 15;
+	static final int T_INIT = 5; 
+	
+	static final int A_MIN = 1;
+	static final int A_MAX = 5;
+	static final int A_INIT = 2; 
 	private JScrollPane scroll_pane;
+	
+	private JSlider K_slider, T_slider, Alpha_slider;
 	
 	protected JTextPane text_pane;
 	protected Exectuor_Thread_Menager menager;
@@ -126,14 +135,15 @@ public class MainWindow
 		
 		right_panel.lf();
 		
-		JLabel k_label = new JLabel("Ilosc iteracji (k)");
-		right_panel.doloz(k_label);
+		JLabel slider_label = new JLabel("Ilosc iteracji (k)");
+		right_panel.doloz(slider_label);
 		
-		JSlider K_slider = new JSlider(JSlider.HORIZONTAL, K_MIN, K_MAX, K_INIT);
+		K_slider = new JSlider(JSlider.HORIZONTAL, K_MIN, K_MAX, K_INIT);
 		//K_slider.setMajorTickSpacing(10);
         K_slider.setMinorTickSpacing(5);
 		K_slider.setPaintTicks(true);
 		K_slider.setPaintLabels(true);
+		
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		labelTable.put( new Integer( 1 ), new JLabel("1") );
 		labelTable.put( new Integer( 10 ), new JLabel("10") );
@@ -144,6 +154,30 @@ public class MainWindow
 		K_slider.setLabelTable( labelTable );
 		K_slider.addChangeListener(this);
 		right_panel.doloz(K_slider);
+		
+		right_panel.lf();
+		
+		slider_label = new JLabel("T whatever");
+		right_panel.doloz(slider_label);
+		T_slider = new JSlider(JSlider.HORIZONTAL, T_MIN, T_MAX, T_INIT);
+		T_slider.setMinorTickSpacing(1);
+		T_slider.setPaintTicks(true);
+		T_slider.setPaintLabels(true);
+		T_slider.setMajorTickSpacing(5);
+		T_slider.addChangeListener(this);
+		right_panel.doloz(T_slider);
+		
+		right_panel.lf();
+		
+		slider_label = new JLabel("Alpha param");
+		right_panel.doloz(slider_label);
+		Alpha_slider = new JSlider(JSlider.HORIZONTAL, A_MIN, A_MAX, A_INIT);
+		Alpha_slider.setMinorTickSpacing(1);
+		Alpha_slider.setMajorTickSpacing(5);
+		Alpha_slider.setPaintTicks(true);
+		Alpha_slider.setPaintLabels(true);
+		Alpha_slider.addChangeListener(this);
+		right_panel.doloz(Alpha_slider);
 		
 		right_panel.lf();
 		
@@ -201,8 +235,19 @@ public class MainWindow
 	}
 	
 	public void stateChanged(ChangeEvent e) {
+		/*
         JSlider source = (JSlider)e.getSource();
-        menager.setKval(source.getValue());
+        menager.setKval(source.getValue());*/
+		JSlider source = (JSlider)e.getSource();
+		if ( e.getSource() == K_slider ){
+			menager.setKval(source.getValue());
+			Alpha_slider.setMaximum(source.getValue());
+		} else if (e.getSource() == T_slider ){
+			menager.setTval(source.getValue());
+		} else{
+			menager.setAplhaVal(source.getValue());
+		}
+		
     }
 	
 	public class JButtonListener implements ActionListener{
