@@ -6,18 +6,18 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import bo_gui.gui.Exectuor_Thread_Menager;
+import bo_gui.gui.Executor_Thread_Menager;
 
 public class ProcessorExecutor implements Runnable{
 	private String output = "";
 	private OutputParser parser;
 	private List<SolutionStruct> result;
-	private Exectuor_Thread_Menager menager;
+	private Executor_Thread_Menager menager;
 	private String inFile, program_name;
 	private List<String> params;
 	//
 	
-	public ProcessorExecutor(Exectuor_Thread_Menager menager , String pExecutor, List<String> params, String inFile){
+	public ProcessorExecutor(Executor_Thread_Menager menager , String pExecutor, List<String> params, String inFile){
 		/// Tworzenie parsera
 		
 		parser = new OutputParser();

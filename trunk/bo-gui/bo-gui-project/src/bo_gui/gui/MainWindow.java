@@ -43,14 +43,14 @@ public class MainWindow
 	static final int T_INIT = 5; 
 	
 	static final int A_MIN = 1;
-	static final int A_MAX = 5;
+	static final int A_MAX = 20;
 	static final int A_INIT = 2; 
 	private JScrollPane scroll_pane;
 	
 	private JSlider K_slider, T_slider, Alpha_slider;
 	
 	protected JTextPane text_pane;
-	protected Exectuor_Thread_Menager menager;
+	protected Executor_Thread_Menager menager;
 	protected Area_MapArea map;
 	protected Area_GraphArea graph;
 	protected JButton StartButton,OpenFileButton;
@@ -63,7 +63,7 @@ public class MainWindow
 	public static final int Graphs_HEIGHT = 300;
 	public MainWindow(){
 		
-		menager = new Exectuor_Thread_Menager(this);
+		menager = new Executor_Thread_Menager(this);
 		confWnd = null;
 		aboutWnd = null;
 		JFrame.setDefaultLookAndFeelDecorated(false);
