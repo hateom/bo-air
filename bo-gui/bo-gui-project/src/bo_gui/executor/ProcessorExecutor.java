@@ -13,10 +13,11 @@ public class ProcessorExecutor implements Runnable{
 	private OutputParser parser;
 	private List<SolutionStruct> result;
 	private Exectuor_Thread_Menager menager;
-	private String inFile, program_name, params;
+	private String inFile, program_name;
+	private List<String> params;
 	//
 	
-	public ProcessorExecutor(Exectuor_Thread_Menager menager , String pExecutor, String params, String inFile){
+	public ProcessorExecutor(Exectuor_Thread_Menager menager , String pExecutor, List<String> params, String inFile){
 		/// Tworzenie parsera
 		
 		parser = new OutputParser();
@@ -24,11 +25,10 @@ public class ProcessorExecutor implements Runnable{
 		this.menager = menager;
 		this.inFile = new String( inFile );
 		this.program_name = new String( pExecutor);
-		this.params = new String ( params );
+		this.params = params;
 	}
 	/*
 	public synchronized void halt(){
-		halt = true;
 		menager.print_debug_info("Halt requested, please wait..");
 	}
 	*/
@@ -48,9 +48,13 @@ public class ProcessorExecutor implements Runnable{
 			Process process = null;
 			command.add(program_name);
 			command.add("--silent=1");
-			command.add(params);
+			//command.add(params);
+			for (int i=0;i<params.size();i++){
+				command.add(params.get(i));
+			}
 			String file_param = new String ( "--input="+inFile );
 			command.add( file_param );
+			//menager.print_debug_info(program_name+" --silent=1"+params+" "+file_param);
 			try { 
 				process = builder.start();
 				menager.setProcess(process);
