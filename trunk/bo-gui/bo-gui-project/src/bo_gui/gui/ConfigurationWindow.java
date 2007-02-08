@@ -7,8 +7,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -19,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 
+import bo_gui.executor.AntennaStruct;
 import bo_gui.gui.Exectuor_Thread_Menager;
 public class ConfigurationWindow extends JFrame 
 								implements ActionListener 
@@ -43,7 +49,7 @@ public class ConfigurationWindow extends JFrame
 	 */
 	private int ypos=1,xpos=0,count=0;
 	private GridBagConstraints constr;
-	
+	private Hashtable<String, List<Float>> optionsTable = null;
 	
 	//private List<>
 	private JFileChooser fc_OpenSaveFile;
@@ -55,6 +61,8 @@ public class ConfigurationWindow extends JFrame
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 	
 		this.menager = menager;
+		optionsTable = new Hashtable<String, List<Float>>();
+		
 		
 		buildings_edit_list = new ArrayList<JSpinner>();
 		transmitter_cost_list = new ArrayList<JSpinner>();
@@ -107,7 +115,7 @@ public class ConfigurationWindow extends JFrame
 			c.gridx = w+1;
 			buildings_edit_list.add( new JSpinner() );
 			buildings_edit_list.get(u).setSize(40, 25);
-			buildings_edit_list.get(u).setValue( 10 + 5*u);
+			//buildings_edit_list.get(u).setValue( 400 + 50*u);
 			panel1.add(buildings_edit_list.get(u),c);
 			//buildings_edit_list.get(u).setName(""+i);
 			u++;
@@ -118,6 +126,11 @@ public class ConfigurationWindow extends JFrame
 			else{
 				h++;
 			}
+		}
+		List<Float> profit = menager.getOptTable().get("profit");
+		for (int i=0;i<profit.size();i++){
+			if (i < buildings_edit_list.size())
+				buildings_edit_list.get(i).setValue(profit.get(i));
 		}
 	}
 	
@@ -143,6 +156,11 @@ public class ConfigurationWindow extends JFrame
 		saveBtn = new JButton( "Save Config to File" );
 		closeBtn = new JButton( "Cancel" );
 		okBtn = new JButton( "Ok" );
+		
+		openBtn.addActionListener(this);
+		saveBtn.addActionListener(this);
+		closeBtn.addActionListener(this);
+		okBtn.addActionListener(this);
 		
 		c.gridx = 0;
 		c.gridy = 0;
@@ -189,5 +207,81 @@ public class ConfigurationWindow extends JFrame
 			}
 			
 		}
+		
+		if ( event.getSource() == openBtn ){
+			File file = ShowOpenFilePopup("Open Config File");
+			if (file != null ) parseConfigFile(file);
+		}
+	}
+	
+	public void parseConfigFile(File filename){
+		String temp,input,optName="range";
+		BufferedReader in = null;
+		int end_index=0, start_index=0,cnt=0, size=0;
+		char znak = ':';
+		
+		optionsTable.clear();
+		
+		List<Float> range = new ArrayList<Float>();
+		List<Float> cost = new ArrayList<Float>();
+		List<Float> profit = new ArrayList<Float>();
+		
+		optionsTable.put("range", range);
+		optionsTable.put("cost", cost);
+		optionsTable.put("profit", profit);
+		
+		
+		try {
+			//System.out.println(filename);
+			in = new BufferedReader(new FileReader(filename.getAbsolutePath()));
+		} catch (FileNotFoundException e) {
+			menager.print_debug_info("[C] Config file not found!");
+			e.printStackTrace();
+		}
+		try {
+			while( (input = in.readLine()) != null){
+				cnt = 0;
+				znak = ':';
+				start_index = 0;
+				end_index = 0;
+				do {
+					size = input.length();
+					end_index = input.indexOf(znak,start_index);
+					temp = input.substring(start_index, end_index);
+					if ( cnt == 0){
+						znak = ';';
+						optName = temp.toString();
+					}
+					else{
+						//System.out.println(temp);
+						optionsTable.get(optName).add(Float.valueOf(temp));
+					}
+					start_index = end_index+1;
+					cnt++;
+				} while( start_index < size);
+			}
+		} catch (IOException e) {
+			menager.print_debug_info("[C] IOException");
+			e.printStackTrace();
+		}
+		
+		/*
+		 * Koniec wypelniania listy parametrow;
+		 */
+		
+		/*
+		 * Ustawianie wartosci na slizgaczach ;)
+		 */
+		
+		for (int i=0;i<profit.size();i++){
+			if (i < buildings_edit_list.size())
+				buildings_edit_list.get(i).setValue(profit.get(i));
+		}
+		
+		/*
+		 * przekazanie informacji o opcjach do menagera
+		 */
+		menager.setOptTable(optionsTable);
+		menager.setOptionFileName(filename.getAbsolutePath());
 	}
 }

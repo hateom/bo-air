@@ -3,9 +3,9 @@ package bo_gui.gui;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.List;
 
-import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
 import bo_gui.executor.ProcessorExecutor;
@@ -21,7 +21,23 @@ public class Exectuor_Thread_Menager {
 	private Process proces;
 	private String filename, prog_name, params;
 	private int k_val;
+	private Hashtable<String, List<Float>> optTable = null;
+	private String OptionFileName = "";
+	private File file = null;
 	
+	public String getOptionFileName() {
+		return OptionFileName.toString();
+	}
+
+
+	public void setOptionFileName(String optionFileName) {
+		/*
+		 * Copying value not reference to prevent changing of reference
+		 */
+		OptionFileName = optionFileName.toString();
+	}
+
+
 	public Exectuor_Thread_Menager( MainWindow okno){
 		this.okno = okno;
 		results_list = new ArrayList<Float>();
@@ -31,11 +47,16 @@ public class Exectuor_Thread_Menager {
 			prog_name = "./processor";
 		}
 		k_val = 45;
+		fillTable();
 	}
 	
 	
 	public synchronized void start_thread(){
 		params = "--K="+k_val;
+		if (OptionFileName != null && !OptionFileName.equals("")) {
+			params = params + " --config="+OptionFileName;
+			//System.out.println(params);
+		}
 /*
 K - iteracje
 T - żywotność elementu na liście TABU
@@ -66,15 +87,20 @@ T - żywotność elementu na liście TABU
 				exec.start();
 				okno.StartButton.setText("Stop");
 			}
-		} else if (error){
-			print_debug_info("[M]No executor file...");
 		} 
+		else if (error){
+			print_debug_info("[M]No executor file...");
+		}
+		else if( optTable == null ){
+			print_debug_info("[M]Please load config file first...");
+		}
 		else{
 			print_debug_info("[M]No input file..");
 		}
 	}
-	public synchronized void setFileName( String filename){
+	public synchronized void setFileName( String filename, File file){
 		this.filename = filename;
+		this.file = file;
 	}
 	public synchronized void signalizeFinish(){
 		okno.StartButton.setEnabled(true);
@@ -128,4 +154,50 @@ T - żywotność elementu na liście TABU
 	        };
 	        SwingUtilities.invokeLater(setPaneText);
 	    }
+
+
+	public Hashtable<String, List<Float>> getOptTable() {
+		return optTable;
+	}
+
+
+	public void setOptTable(Hashtable<String, List<Float>> optTable) {
+		// if ( this.optTable != null ) this.optTable.clear(); 
+		this.optTable = optTable;
+		if (filename != null && !filename.equals("")) {
+			okno.map.DrawMap(file);
+		}
+	}
+	
+	public void fillTable(){
+		optTable = new Hashtable<String, List<Float>>();
+		
+		List<Float> range = new ArrayList<Float>();
+		List<Float> cost = new ArrayList<Float>();
+		List<Float> profit = new ArrayList<Float>();
+		
+		optTable.put("range", range);
+		optTable.put("cost", cost);
+		optTable.put("profit", profit);
+		
+		range.add(0.0f);
+		range.add(3.0f);
+		range.add(5.0f);
+		range.add(6.0f);
+		range.add(7.0f);
+		range.add(8.0f);
+		
+		cost.add(0.0f);
+		cost.add(1000.0f);
+		cost.add(3000.0f);
+		cost.add(4000.0f);
+		cost.add(4800.0f);
+		cost.add(5200.0f);
+		
+		profit.add(0.0f);
+		for(int i=300;i<2800; i+=100){
+			profit.add( (float)i );
+		}
+		
+	}
 }
