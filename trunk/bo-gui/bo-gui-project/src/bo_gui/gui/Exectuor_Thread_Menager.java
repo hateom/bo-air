@@ -20,7 +20,7 @@ public class Exectuor_Thread_Menager {
 	private boolean halted = false;
 	private Process proces;
 	private String filename, prog_name;
-	private int k_val;
+	private int k_val ,t_val=5, alphaVal=2;
 	private Hashtable<String, List<Float>> optTable = null;
 	private String OptionFileName = "";
 	private File file = null;
@@ -62,6 +62,8 @@ public class Exectuor_Thread_Menager {
 		
 		params.clear();
 		params.add("--K="+k_val);
+		params.add("--T="+t_val);
+		params.add("--ALPHA="+alphaVal);
 		params.add("--config="+OptionFileName);
 /*
 K - iteracje i 
@@ -151,6 +153,14 @@ T - żywotność elementu na liście TABU
 	
 	public void setKval( int value ){
 		k_val = value;
+	}
+	
+	public void setTval ( int value ){
+		t_val = value;
+	}
+	
+	public void setAplhaVal ( int value ){
+		alphaVal = value;
 	}
 	// taka struktura zeby uniknac bledow  Interrupted attempt to aquire write lock..
 	public void print_debug_info( final String text ) {
