@@ -29,7 +29,6 @@ public class OutputParser {
 		temp_str = "";
 		
 		int size = input.length();
-
 		
 		do {
 			end_index = input.indexOf(';',start_index);
@@ -41,6 +40,7 @@ public class OutputParser {
 				subStr_index = temp_str.indexOf(':');
 				transmitter_number = Integer.valueOf(temp_str.substring(0,subStr_index));
 				transmitter_type = Integer.valueOf(temp_str.substring(subStr_index+1));
+				//System.out.println(""+transmitter_type +" "+ transmitter_number);
 				trans_list.add( new AntennaStruct(transmitter_number, transmitter_type));
 			}
 			start_index = end_index+1;

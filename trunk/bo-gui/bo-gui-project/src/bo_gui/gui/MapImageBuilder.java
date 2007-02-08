@@ -70,15 +70,7 @@ public class MapImageBuilder {
 			x = u % max_size;
 			y = u / max_size; //max_size == map_width
 			typ = solution.transmitter.get(i).type;
-			/*switch (solution.transmitter.get(i).type){
-				case 0 : g.setColor(Color.RED); break;
-				case 1 : g.setColor(Color.ORANGE); break;
-				case 2 : g.setColor(Color.GREEN); break;
-				case 3 : g.setColor(Color.PINK); break;
-				default : g.setColor(Color.BLUE); break;
 			
-			}
-			*/
 			g.setColor( Color.GREEN);
 			
 			g.fillRect(x*box_w, y*box_h, box_w, box_h);
@@ -86,8 +78,8 @@ public class MapImageBuilder {
 			g.setColor( new Color( 0, 0.8f, 0, 0.1f) );
 			int range = menager.getOptTable().get("range").get(typ).intValue();
 			
-			g.fillOval(x*box_w-range*box_w/2+box_w/2, y*box_h-range*box_h/2+box_h/2, range*box_w, range*box_h);
-			//System.out.println(solution.transmitter.get(i).index + ":"+ solution.transmitter.get(i).type);
+			g.fillOval(x*box_w-range*box_w+box_w/2, y*box_h-range*box_h+box_h/2, range*box_w*2, range*box_h*2);
+			
 		}
 		return image;
 	}

@@ -19,11 +19,12 @@ public class Exectuor_Thread_Menager {
 	private int best_solution;
 	private boolean halted = false;
 	private Process proces;
-	private String filename, prog_name, params;
+	private String filename, prog_name;
 	private int k_val;
 	private Hashtable<String, List<Float>> optTable = null;
 	private String OptionFileName = "";
 	private File file = null;
+	private List<String> params = null;
 	
 	public String getOptionFileName() {
 		return OptionFileName.toString();
@@ -47,18 +48,23 @@ public class Exectuor_Thread_Menager {
 			prog_name = "./processor";
 		}
 		k_val = 45;
+		params = new ArrayList<String>();
 		fillTable();
 	}
 	
 	
 	public synchronized void start_thread(){
-		params = "--K="+k_val;
+		/*params = "--K="+k_val+" ";
 		if (OptionFileName != null && !OptionFileName.equals("")) {
-			params = params + " --config="+OptionFileName;
+			params = params +"--config="+OptionFileName;
 			//System.out.println(params);
-		}
+		}*/
+		
+		params.clear();
+		params.add("--K="+k_val);
+		params.add("--config="+OptionFileName);
 /*
-K - iteracje
+K - iteracje i 
 T - żywotność elementu na liście TABU
 
 **/
