@@ -78,7 +78,7 @@ public class MapImageBuilder {
 			g.setColor( new Color( 0, 0.8f, 0, 0.1f) );
 			int range = menager.getOptTable().get("range").get(typ).intValue();
 			
-			g.fillOval(x*box_w-range*box_w+box_w/2, y*box_h-range*box_h+box_h/2, range*box_w*2, range*box_h*2);
+			g.fillOval(x*box_w-range*box_w, y*box_h-range*box_h, range*box_w*2+box_w, range*box_h*2+box_h);
 			
 		}
 		return image;
