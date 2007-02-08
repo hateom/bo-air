@@ -185,18 +185,15 @@ T - żywotność elementu na liście TABU
 		range.add(5.0f);
 		range.add(6.0f);
 		range.add(7.0f);
-		range.add(8.0f);
 		
 		cost.add(0.0f);
 		cost.add(1000.0f);
-		cost.add(3000.0f);
-		cost.add(4000.0f);
-		cost.add(4800.0f);
-		cost.add(5200.0f);
+		cost.add(2500.0f);
+		cost.add(4500.0f);
+		cost.add(5000.0f);
 		
-		profit.add(0.0f);
-		for(int i=300;i<2800; i+=100){
-			profit.add( (float)i );
+		for(int i='a';i <= 'z'; i++){
+			profit.add( (i-'a'+1)*300.0f );
 		}
 		
 	}
