@@ -21,10 +21,10 @@ public class MapImageBuilder {
 	private BufferedImage image;
 	private List<Integer> lista_pol;
 	private Color szary = new Color( 230, 230, 230 );
-	private Exectuor_Thread_Menager menager;
+	private Executor_Thread_Menager menager;
 	private Float ratio;
 	
-	public MapImageBuilder(int w, int h, Exectuor_Thread_Menager menager){
+	public MapImageBuilder(int w, int h, Executor_Thread_Menager menager){
 		linie_list = new ArrayList<String>();
 		lista_pol = new ArrayList<Integer>();
 		area_height = h;

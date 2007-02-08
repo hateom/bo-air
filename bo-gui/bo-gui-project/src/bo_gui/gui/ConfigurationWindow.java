@@ -25,7 +25,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 
 import bo_gui.executor.AntennaStruct;
-import bo_gui.gui.Exectuor_Thread_Menager;
+import bo_gui.gui.Executor_Thread_Menager;
 public class ConfigurationWindow extends JFrame 
 								implements ActionListener 
 {
@@ -33,7 +33,7 @@ public class ConfigurationWindow extends JFrame
 	 * 
 	 */
 	private static final long serialVersionUID = 7106188094123797333L;
-	private Exectuor_Thread_Menager menager;
+	private Executor_Thread_Menager menager;
 	
 	private JPanel panel1;
 	private JPanel panel2;
@@ -44,6 +44,8 @@ public class ConfigurationWindow extends JFrame
 	private List<JSpinner> buildings_edit_list;
 	private List<JSpinner> transmitter_range_list;
 	private List<JSpinner> transmitter_cost_list;
+	
+	private File filename;
 	/*
 	 * do obliczania polozenia w gridbagu dla panelu2
 	 */
@@ -54,7 +56,7 @@ public class ConfigurationWindow extends JFrame
 	//private List<>
 	private JFileChooser fc_OpenSaveFile;
 	
-	ConfigurationWindow ( Exectuor_Thread_Menager menager ){
+	ConfigurationWindow ( Executor_Thread_Menager menager ){
 		super("Configure parameters...");
 		setSize( 600, 500 );
 		setVisible( true );
@@ -132,6 +134,9 @@ public class ConfigurationWindow extends JFrame
 			if (i < buildings_edit_list.size())
 				buildings_edit_list.get(i).setValue(profit.get(i));
 		}
+		
+		optionsTable = (Hashtable<String, List<Float>>) menager.getOptTable().clone();
+		
 	}
 	
 	public void fillPanel2(){
@@ -211,10 +216,22 @@ public class ConfigurationWindow extends JFrame
 		if ( event.getSource() == openBtn ){
 			File file = ShowOpenFilePopup("Open Config File");
 			if (file != null ) parseConfigFile(file);
+		} else if( event.getSource() == okBtn ) {
+			Hashtable<String, List<Float>> clone = (Hashtable<String, List<Float>>) optionsTable.clone();
+			/*
+			 * przekazanie informacji o opcjach do menagera
+			 */
+			if ( clone != null ) menager.setOptTable(clone);
+			if ( filename != null ) 
+				menager.setOptionFileName(filename.getAbsolutePath());
+			this.setVisible(false);
+		} else if ( event.getSource() == closeBtn ){
+			this.setVisible(false);
 		}
 	}
 	
 	public void parseConfigFile(File filename){
+		this.filename = filename;
 		String temp,input,optName="range";
 		BufferedReader in = null;
 		int end_index=0, start_index=0,cnt=0, size=0;
@@ -277,11 +294,5 @@ public class ConfigurationWindow extends JFrame
 			if (i < buildings_edit_list.size())
 				buildings_edit_list.get(i).setValue(profit.get(i));
 		}
-		
-		/*
-		 * przekazanie informacji o opcjach do menagera
-		 */
-		menager.setOptTable(optionsTable);
-		menager.setOptionFileName(filename.getAbsolutePath());
 	}
 }
