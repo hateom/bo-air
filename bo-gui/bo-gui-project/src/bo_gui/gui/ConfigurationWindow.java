@@ -20,6 +20,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -40,16 +42,20 @@ public class ConfigurationWindow extends JFrame
 	 */
 	private static final long serialVersionUID = 7106188094123797333L;
 	private Executor_Thread_Menager menager;
-	
+	private static final int YPOS_MAX = 20;
 	private JPanel panel1;
 	private JPanel panel2;
 	private JPanel panel3;
 	
-	private JButton openBtn, saveBtn, closeBtn, okBtn, addBtn;
+	private JPanel panel_down;
+	
+	private JButton openBtn, saveBtn, closeBtn, okBtn, addBtn, removeBtn;
 
 	private List<JSpinner> buildings_edit_list;
+	
 	private List<JSpinner> transmitter_range_list;
 	private List<JSpinner> transmitter_cost_list;
+	private List<JLabel> transmitter_type_label;
 	
 	private File filename;
 	/*
@@ -78,6 +84,7 @@ public class ConfigurationWindow extends JFrame
 		buildings_edit_list = new ArrayList<JSpinner>();
 		transmitter_cost_list = new ArrayList<JSpinner>();
 		transmitter_range_list = new ArrayList<JSpinner>();
+		transmitter_type_label = new ArrayList<JLabel>();
 		
 		constr = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
@@ -139,7 +146,7 @@ public class ConfigurationWindow extends JFrame
 			buildings_edit_list.get(u).setSize(40, 25);
 			//buildings_edit_list.get(u).setValue( 400 + 50*u);
 			panel1.add(buildings_edit_list.get(u),c);
-			buildings_edit_list.get(u).setName(""+u);
+			buildings_edit_list.get(u).setName("build:"+u);
 			u++;
 			if( 25*h > 450 ){
 				w+=2;
@@ -166,11 +173,26 @@ public class ConfigurationWindow extends JFrame
 		constr.gridwidth = 1;
 		constr.gridx = 0;
 		constr.gridy = 0;
+		
+		JPanel panel_top = new JPanel();
+		panel_top.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		
+		
+		panel2.setLayout( new BorderLayout() );
+		panel2.add(panel_top, BorderLayout.PAGE_START);
+		
 		addBtn = new JButton("Add transmitter");
-		panel2.setLayout(new BorderLayout());
-		panel2.add(addBtn, BorderLayout.NORTH);
+		//panel_top.setLayout(new BorderLayout());
+		panel_top.add(addBtn, BorderLayout.NORTH);
 		addBtn.addActionListener(this);
-		panel2.setLayout( new GridBagLayout() );
+		
+		removeBtn = new JButton(" Remove transmitter");
+		panel_top.add(removeBtn, BorderLayout.NORTH);
+		removeBtn.addActionListener(this);
+		
+		panel_down = new JPanel();
+		panel_down.setLayout( new GridBagLayout() );
+		panel2.add(panel_down,BorderLayout.CENTER);
 	}
 	
 	private void fillPanel3(){
@@ -219,30 +241,75 @@ public class ConfigurationWindow extends JFrame
 
 	public void stateChanged(ChangeEvent event) {
 		JSpinner source = (JSpinner)event.getSource();
-		float u = Float.parseFloat(buildings_edit_list.get(Integer.parseInt(source.getName())).getValue().toString());
-		optionsTable.get("profit").set(Integer.parseInt(source.getName()), u);
+		String str, source_name = source.getName(); 
+		if ( source_name.contains("build") ){
+			str = source_name.substring(source_name.indexOf(':')+1);
+			float u = Float.parseFloat(buildings_edit_list.get(Integer.parseInt(str)).getValue().toString());
+			optionsTable.get("profit").set(Integer.parseInt(str), u);
+		} else if( source_name.contains("profit")){
+			str = source_name.substring(source_name.indexOf(':')+1);
+			float range = Float.parseFloat(transmitter_range_list.get(Integer.parseInt(str)).getValue().toString());
+			float cost = Float.parseFloat(transmitter_cost_list.get(Integer.parseInt(str)).getValue().toString());
+			optionsTable.get("range").set(Integer.parseInt(str), range);
+			optionsTable.get("cost").set(Integer.parseInt(str), cost);
+		}
 		val_changed = true;
 	}
 	
 	public void actionPerformed(ActionEvent event) {
 		if ( event.getSource() == addBtn ){
 			JLabel lab = new JLabel(""+count);
+			JSpinner range_spinner = new JSpinner();
+			range_spinner.setValue(5);
+			JSpinner cost_spinner = new JSpinner();
+			cost_spinner.setValue(500);
+			
+			
+			transmitter_type_label.add(lab);
+			transmitter_cost_list.add(cost_spinner);
+			transmitter_range_list.add(range_spinner);
+			
 			constr.gridx = xpos;
 			constr.gridy = ypos;
 			
-			panel2.add( lab, constr );
+			panel_down.add( lab, constr );
+			
+			constr.gridx = xpos+1;
+			panel_down.add( range_spinner, constr );
+			
+			constr.gridx = xpos+2;
+			panel_down.add( cost_spinner, constr );
+			
 			this.repaint();
 			count++;
-			if( 25*ypos > 450 ){
+			if( ypos >  YPOS_MAX ){
 				ypos=1;
 				xpos+=5;
 			} else{
 				ypos++;
 			}
 			
-		}
-		
-		if ( event.getSource() == openBtn ){
+		} 
+		else if ( event.getSource() == removeBtn ){
+			if( transmitter_type_label.size() != 0 ){
+				int last = transmitter_type_label.size()-1;
+				panel_down.remove(transmitter_type_label.get(last));
+				panel_down.remove(transmitter_range_list.get(last));
+				panel_down.remove(transmitter_cost_list.get(last));
+				transmitter_type_label.remove(last);
+				transmitter_range_list.remove(last);
+				transmitter_cost_list.remove(last);
+				this.repaint();
+				count--;
+				if( ypos <  1){
+					ypos=YPOS_MAX;
+					xpos-=5;
+				} else{
+					ypos--;
+				}
+			}
+		} 
+		else if ( event.getSource() == openBtn ){
 			File file = ShowOpenFilePopup("Open Config File");
 			if (file != null ) parseConfigFile(file);
 		} else if( event.getSource() == okBtn ) {
