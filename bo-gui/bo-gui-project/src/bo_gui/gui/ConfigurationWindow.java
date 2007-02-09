@@ -34,7 +34,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import bo_gui.executor.AntennaStruct;
 import bo_gui.gui.Executor_Thread_Menager;
 public class ConfigurationWindow extends JFrame 
 								implements ActionListener, ChangeListener 
