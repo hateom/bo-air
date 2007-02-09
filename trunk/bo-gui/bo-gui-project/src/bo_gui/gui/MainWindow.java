@@ -1,19 +1,13 @@
 package bo_gui.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Hashtable;
-import java.util.List;
-
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,12 +18,8 @@ import javax.swing.JSlider;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import bo_gui.executor.ProcessorExecutor;
-import bo_gui.executor.SolutionStruct;
 
 public class MainWindow
 			implements ChangeListener
@@ -135,7 +125,7 @@ public class MainWindow
 		
 		right_panel.lf();
 		
-		JLabel slider_label = new JLabel("Ilosc iteracji (k)");
+		JLabel slider_label = new JLabel("Iteration number (K)");
 		right_panel.doloz(slider_label);
 		
 		K_slider = new JSlider(JSlider.HORIZONTAL, K_MIN, K_MAX, K_INIT);
@@ -157,7 +147,7 @@ public class MainWindow
 		
 		right_panel.lf();
 		
-		slider_label = new JLabel("T whatever");
+		slider_label = new JLabel("T parameter");
 		right_panel.doloz(slider_label);
 		T_slider = new JSlider(JSlider.HORIZONTAL, T_MIN, T_MAX, T_INIT);
 		T_slider.setMinorTickSpacing(1);
@@ -169,7 +159,7 @@ public class MainWindow
 		
 		right_panel.lf();
 		
-		slider_label = new JLabel("Alpha param");
+		slider_label = new JLabel("Alpha parameter");
 		right_panel.doloz(slider_label);
 		Alpha_slider = new JSlider(JSlider.HORIZONTAL, A_MIN, A_MAX, A_INIT);
 		Alpha_slider.setMinorTickSpacing(1);
