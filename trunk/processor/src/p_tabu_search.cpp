@@ -12,6 +12,17 @@
 #define def_T        5
 #define def_ALPHA    2
 
+#define PRINT_SOL( SOL, Q )                                             \
+            pOut->printa( "%3.3f;", Q!=0.0f?-Q:0.0f );                  \
+            for( size_t s=0; s<ssize; ++s )                             \
+            {                                                           \
+                if( SOL.vec[s] != 0 )                                   \
+                {                                                       \
+                    pOut->printa( "%d:%d;", s, SOL.vec[s] );            \
+                }                                                       \
+            }                                                           \
+            pOut->printa( "\n" );
+
 pTabuSearch::pTabuSearch() : tabu_list(NULL), ssize(0)
 {
 }
@@ -39,26 +50,41 @@ float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, 
 {
     float q_temp;
     
-    if( ink % 5 == 0 )
+    if( ink % 7 == 0 )
     {
+        pOut->print( "imp: swap & inc %d, %d: ", i, j );
         in->swap( i, j );
         in->inc( i, j );
     }
-    else if( ink % 5 == 1 )
+    else if( ink % 7 == 1 )
     {
+        pOut->print( "imp: swap & dec %d, %d: ", i, j );
         in->swap( i, j );
         in->dec( i, j );
     }
-    else if ( ink % 5 == 2 )
+    else if ( ink % 7 == 2 )
     {
+        pOut->print( "imp: dec %d, %d: ", i, j );
         in->dec( i, j );
     }
-    else if ( ink % 5 == 3 )
+    else if ( ink % 7 == 3 )
     {
+        pOut->print( "imp: inc %d, %d: ", i, j );
         in->inc( i, j );
+    }
+    else if( ink % 7 == 4 )
+    {
+        pOut->print( "imp: decinc %d, %d: ", i, j );
+        in->decinc( i, j );
+    }
+    else if( ink % 7 == 5 )
+    {
+        pOut->print( "imp: incdec %d, %d: ", i, j );
+        in->incdec( i, j );
     }
     else // if( ink % 4 == 3 )
     {
+        pOut->print( "imp: swap %d, %d: ", i, j );
         in->swap( i, j );
     }
     
@@ -69,25 +95,30 @@ float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, 
         q_temp += (float)( (p_ALPHA*long_list( i, j ))/ink );
     }
 
+    pOut->print( "%2.2f\n", q_temp != 0.0f ? -q_temp : 0.0f );
+
     return q_temp;
 }
 
 int pTabuSearch::exec()
 {
     pSolution s_a( ssize ), s_min( ssize ), s_temp( ssize ), s_temp2( ssize ), 
-              s_p( ssize ), s_pp( ssize ), s_prev( ssize );
+              s_p( ssize ), s_pp( ssize ), s_prev( ssize ), s_start( ssize );
 
     float Q_min, q_min, q_min2, qt;
     bool ch = false;
     size_t ip = 0, jp = 1, ipp = 0, jpp = 1;
+    size_t p_K2 = p_K/2, r_s = 0, p_RS = 10;
 
     s_a.init( pc::transmitter_type_count(), Map->building_count() );
 
     // initialization
-    s_min = s_a; s_prev = s_min;
+    s_min = s_a; s_prev = s_min; s_start = s_a;
 
     Q_min = Map->eval( &s_a ); q_min = q_min2 = Q_min;
     s_p = s_min; s_pp = s_min;
+    pOut->print( ">> starting solution:\n" );
+    PRINT_SOL( s_a, Q_min );
 
     int z = 0;
     size_t k = 0;
@@ -100,6 +131,8 @@ int pTabuSearch::exec()
             {
                 for( size_t i=j; i<ssize; ++i )
                 {
+                    if( i == j ) continue;
+
                     if( short_list( i, j ) == 0 )
                     {
                         // PI( i*, j* )
@@ -167,6 +200,15 @@ int pTabuSearch::exec()
                 {
                     break;
                 }
+                if( k > p_K2 && s_a == s_start && r_s < p_RS )
+                {
+                    pOut->print( ">> initializing solution (no improvement)\n" );
+                    s_a.init( pc::transmitter_type_count(), Map->building_count() );
+                    Q_min = Map->eval( &s_a ); q_min = q_min2 = Q_min;
+                    s_start = s_a;
+                    k = 0;
+                    r_s++;
+                }
             }
             else
             {
@@ -174,17 +216,29 @@ int pTabuSearch::exec()
             }
             s_prev = s_min;
 
-            pOut->printa( "%3.3f;", -Q_min );
-            for( size_t s=0; s<ssize; ++s )
-            {
-                if( s_min.vec[s] != 0 )
-                {
-                    pOut->printa( "%d:%d;", s, s_min.vec[s] );
-                }
-            }
-            pOut->printa( "\n" );
+
+            // print solution to output _ALWAYS_
+            PRINT_SOL( s_min, Q_min );
 
         }
+
+    // print short & long list
+    pOut->print( "* long & short list:\n" );
+    for( size_t a=0; a<ssize; ++a )
+    {
+        for( size_t b=0; b<ssize; ++b )
+        {
+            if( a == b )
+            {
+                pOut->print( "xx " );
+            }
+            else
+            {
+                pOut->print( "%02d ", tabu_list[b+a*ssize] );
+            }
+        }
+        pOut->print( "\n" );
+    }
 
     return 0;
 }
@@ -211,6 +265,7 @@ void pTabuSearch::decrease_short_list()
     {
         for( size_t i=j; i<ssize; ++i )
         {
+            if( i == j ) continue;
             if( short_list( i, j ) > 0 )
             {
                 short_list( i, j ) -= 1;
@@ -221,7 +276,7 @@ void pTabuSearch::decrease_short_list()
 
 int & pTabuSearch::short_list( size_t i, size_t j )
 {
-    P_ASSERT( i < ssize || j < ssize || j == i, "out of range" );
+    P_ASSERT( i < ssize && j < ssize && j != i, "out of range" );
 
     if( i > j )
     {
@@ -235,7 +290,7 @@ int & pTabuSearch::short_list( size_t i, size_t j )
 
 int & pTabuSearch::long_list( size_t i, size_t j )
 {
-    P_ASSERT( i < ssize || j < ssize || i == j, "out of range" );
+    P_ASSERT( i < ssize && j < ssize && i != j, "out of range" );
 
     if( i < j )
     {
