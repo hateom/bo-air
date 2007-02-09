@@ -254,10 +254,19 @@ public class ConfigurationWindow extends JFrame
 				/*
 				 * to zapisz to pliku config_auto i ten zwroc
 				 */
+				File file = ShowOpenFilePopup("Save current config to file...");
+				if (file != null && file.getName() != "" ) {
+					saveConfigToFile(file);
+					filename = file;
+					menager.print_debug_info("[C] Config saved..");
+				}
 			} 
 			if ( filename != null ) 
 					menager.setOptionFileName(filename.getAbsolutePath());
-			if ( clone != null ) menager.setOptTable(clone);
+			if ( clone != null && filename!= null ) {
+				menager.setOptTable(clone);
+				menager.print_debug_info("[C] Config accepted");
+			}
 			this.setVisible(false);
 			val_changed = false;
 		} else if ( event.getSource() == closeBtn ){
@@ -265,7 +274,10 @@ public class ConfigurationWindow extends JFrame
 			val_changed = false;
 		} else if ( event.getSource() == saveBtn ){
 			File file = ShowOpenFilePopup("Save current config to file...");
-			if (file != null && file.getName() != "" ) saveConfigToFile(file);
+			if (file != null && file.getName() != "" ) {
+				saveConfigToFile(file);
+				filename = file;
+			}
 		}
 	}
 	
