@@ -267,7 +267,10 @@ public class MainWindow
 			
 			if (event.getSource() == configurationButton){
 				if ( confWnd == null ) confWnd = new ConfigurationWindow(menager);
-				else confWnd.setVisible(true);
+				else {
+					confWnd.setVisible(true);
+					confWnd.set_sliders(menager.getOptTable());
+				}
 			}
 			
 			if (event.getSource() == aboutBtn){
