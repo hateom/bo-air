@@ -28,6 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -42,7 +44,7 @@ public class ConfigurationWindow extends JFrame
 	 */
 	private static final long serialVersionUID = 7106188094123797333L;
 	private Executor_Thread_Menager menager;
-	private static final int YPOS_MAX = 20;
+	private static final int YPOS_MAX = 15;
 	private JPanel panel1;
 	private JPanel panel2;
 	private JPanel panel3;
@@ -115,6 +117,7 @@ public class ConfigurationWindow extends JFrame
 		fillPanel1();
 		fillPanel2();
 		fillPanel3();
+		set_sliders( optionsTable );
 	}
 	
 	public void set_sliders ( Hashtable<String, List<Float>> table ){
@@ -126,6 +129,35 @@ public class ConfigurationWindow extends JFrame
 		/*
 		 * ustawianie innych wart
 		 */
+		int size = transmitter_range_list.size();
+		
+		List<Float> cost_list = table.get("cost");
+		List<Float> range_list = table.get("range");
+		
+		if (size != table.get("range").size()){
+			for( int i=0; i<size; i++ ){
+				panel_down.remove(transmitter_type_label.get(i));
+				panel_down.remove(transmitter_range_list.get(i));
+				panel_down.remove(transmitter_cost_list.get(i));
+			}
+			transmitter_cost_list.clear();
+			transmitter_range_list.clear();
+			transmitter_type_label.clear();
+			count = 0;
+			ypos = 1;
+			xpos = 0;
+			for (int i=0; i<range_list.size();i++){
+				addTransmitterSpinner( range_list.get(i), cost_list.get(i) );
+			}
+			transmitter_range_list.get(0).setEnabled(false);
+			transmitter_cost_list.get(0).setEnabled(false);
+		} else {
+			for (int i=0; i<size;i++){
+				transmitter_range_list.get(i).setValue( range_list.get(i) );
+				transmitter_cost_list.get(i).setValue( cost_list.get(i) );
+				
+			}
+		}
 	}
 	
 	private void fillPanel1(){
@@ -142,8 +174,13 @@ public class ConfigurationWindow extends JFrame
 			JLabel lab = new JLabel(""+(char)i);
 			panel1.add(lab,c);
 			c.gridx = w+1;
+			final SpinnerModel p_model = new SpinnerNumberModel(0, //wart pocz
+					0, //min
+					5000, //max
+					1);
 			buildings_edit_list.add( new JSpinner() );
 			buildings_edit_list.get(u).setSize(40, 25);
+			buildings_edit_list.get(u).setModel(p_model);
 			//buildings_edit_list.get(u).setValue( 400 + 50*u);
 			panel1.add(buildings_edit_list.get(u),c);
 			buildings_edit_list.get(u).setName("build:"+u);
@@ -170,6 +207,7 @@ public class ConfigurationWindow extends JFrame
 	private void fillPanel2(){
 		//GridBagConstraints c = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
+		constr.insets = new Insets(3,1,1,1);
 		constr.gridwidth = 1;
 		constr.gridx = 0;
 		constr.gridy = 0;
@@ -193,6 +231,7 @@ public class ConfigurationWindow extends JFrame
 		panel_down = new JPanel();
 		panel_down.setLayout( new GridBagLayout() );
 		panel2.add(panel_down,BorderLayout.CENTER);
+		
 	}
 	
 	private void fillPanel3(){
@@ -246,7 +285,7 @@ public class ConfigurationWindow extends JFrame
 			str = source_name.substring(source_name.indexOf(':')+1);
 			float u = Float.parseFloat(buildings_edit_list.get(Integer.parseInt(str)).getValue().toString());
 			optionsTable.get("profit").set(Integer.parseInt(str), u);
-		} else if( source_name.contains("profit")){
+		} else if( source_name.contains("cost") || source_name.contains("range")){
 			str = source_name.substring(source_name.indexOf(':')+1);
 			float range = Float.parseFloat(transmitter_range_list.get(Integer.parseInt(str)).getValue().toString());
 			float cost = Float.parseFloat(transmitter_cost_list.get(Integer.parseInt(str)).getValue().toString());
@@ -256,50 +295,81 @@ public class ConfigurationWindow extends JFrame
 		val_changed = true;
 	}
 	
+	private void addTransmitterSpinner( float rangeVal, float costVal){
+		final SpinnerModel r_model = new SpinnerNumberModel(rangeVal, //wart pocz
+				0, //min
+				500, //max
+				1);
+		final SpinnerModel c_model = new SpinnerNumberModel(costVal, //wart pocz
+				0, //min
+				50000, //max
+				1);
+		
+		JLabel lab = new JLabel(""+count);
+		JSpinner range_spinner = new JSpinner();
+		JSpinner cost_spinner = new JSpinner();
+		
+		cost_spinner.setModel(c_model);
+		range_spinner.setModel(r_model);
+		
+		//cost_spinner.setValue(costVal);
+		//range_spinner.setValue(rangeVal);
+		
+		transmitter_type_label.add(lab);
+		transmitter_cost_list.add(cost_spinner);
+		transmitter_range_list.add(range_spinner);
+		
+		cost_spinner.setName("cost:"+count);
+		range_spinner.setName("range:"+count);
+		
+		cost_spinner.addChangeListener(this);
+		range_spinner.addChangeListener(this);
+		
+		constr.gridx = xpos;
+		constr.gridy = ypos;
+		
+		panel_down.add( lab, constr );
+		
+		constr.gridx = xpos+1;
+		panel_down.add( range_spinner, constr );
+		
+		constr.gridx = xpos+2;
+		panel_down.add( cost_spinner, constr );
+		
+		this.repaint();
+		count++;
+		if( ypos >  YPOS_MAX ){
+			ypos=1;
+			xpos+=5;
+		} else{
+			ypos++;
+		}
+	}
+	
 	public void actionPerformed(ActionEvent event) {
 		if ( event.getSource() == addBtn ){
-			JLabel lab = new JLabel(""+count);
-			JSpinner range_spinner = new JSpinner();
-			range_spinner.setValue(5);
-			JSpinner cost_spinner = new JSpinner();
-			cost_spinner.setValue(500);
-			
-			
-			transmitter_type_label.add(lab);
-			transmitter_cost_list.add(cost_spinner);
-			transmitter_range_list.add(range_spinner);
-			
-			constr.gridx = xpos;
-			constr.gridy = ypos;
-			
-			panel_down.add( lab, constr );
-			
-			constr.gridx = xpos+1;
-			panel_down.add( range_spinner, constr );
-			
-			constr.gridx = xpos+2;
-			panel_down.add( cost_spinner, constr );
-			
-			this.repaint();
-			count++;
-			if( ypos >  YPOS_MAX ){
-				ypos=1;
-				xpos+=5;
-			} else{
-				ypos++;
-			}
-			
+			addTransmitterSpinner(5, 500);
+			optionsTable.get("range").add(5.0f);
+			optionsTable.get("cost").add(500.0f);
+			val_changed = true;
 		} 
 		else if ( event.getSource() == removeBtn ){
-			if( transmitter_type_label.size() != 0 ){
+			if( transmitter_type_label.size() != 1 ){
 				int last = transmitter_type_label.size()-1;
+				
 				panel_down.remove(transmitter_type_label.get(last));
 				panel_down.remove(transmitter_range_list.get(last));
 				panel_down.remove(transmitter_cost_list.get(last));
+				
 				transmitter_type_label.remove(last);
 				transmitter_range_list.remove(last);
 				transmitter_cost_list.remove(last);
+				
+				optionsTable.get("range").remove(last);
+				optionsTable.get("cost").remove(last);
+				
 				this.repaint();
+				val_changed = true;
 				count--;
 				if( ypos <  1){
 					ypos=YPOS_MAX;
