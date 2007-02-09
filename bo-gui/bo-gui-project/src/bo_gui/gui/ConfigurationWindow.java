@@ -8,12 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -23,11 +27,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import bo_gui.executor.AntennaStruct;
 import bo_gui.gui.Executor_Thread_Menager;
 public class ConfigurationWindow extends JFrame 
-								implements ActionListener 
+								implements ActionListener, ChangeListener 
 {
 	/**
 	 * 
@@ -53,6 +59,7 @@ public class ConfigurationWindow extends JFrame
 	private GridBagConstraints constr;
 	private Hashtable<String, List<Float>> optionsTable = null;
 	
+	private boolean val_changed=false;
 	//private List<>
 	private JFileChooser fc_OpenSaveFile;
 	
@@ -63,8 +70,10 @@ public class ConfigurationWindow extends JFrame
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 	
 		this.menager = menager;
-		optionsTable = new Hashtable<String, List<Float>>();
-		
+		//optionsTable = new Hashtable<String, List<Float>>();
+		//Hashtable<String, List<Float>> clone = (Hashtable<String, List<Float>>) menager.getOptTable().clone();
+		this.optionsTable = copyHashTable ( menager.getOptTable() );
+		//optionsTable = clone;
 		
 		buildings_edit_list = new ArrayList<JSpinner>();
 		transmitter_cost_list = new ArrayList<JSpinner>();
@@ -101,7 +110,18 @@ public class ConfigurationWindow extends JFrame
 		fillPanel3();
 	}
 	
-	public void fillPanel1(){
+	public void set_sliders ( Hashtable<String, List<Float>> table ){
+		for (int i=0; i< buildings_edit_list.size();i++){
+			buildings_edit_list.get(i).removeChangeListener(this);
+			buildings_edit_list.get(i).setValue( table.get("profit").get(i) );
+			buildings_edit_list.get(i).addChangeListener(this);
+		}
+		/*
+		 * ustawianie innych wart
+		 */
+	}
+	
+	private void fillPanel1(){
 		int u = 0, h=0;
 		int w = 0;
 		GridBagConstraints c = new GridBagConstraints();
@@ -119,7 +139,7 @@ public class ConfigurationWindow extends JFrame
 			buildings_edit_list.get(u).setSize(40, 25);
 			//buildings_edit_list.get(u).setValue( 400 + 50*u);
 			panel1.add(buildings_edit_list.get(u),c);
-			//buildings_edit_list.get(u).setName(""+i);
+			buildings_edit_list.get(u).setName(""+u);
 			u++;
 			if( 25*h > 450 ){
 				w+=2;
@@ -129,17 +149,18 @@ public class ConfigurationWindow extends JFrame
 				h++;
 			}
 		}
+		/*
+		 * setting initial values and setting listener
+		 */
 		List<Float> profit = menager.getOptTable().get("profit");
 		for (int i=0;i<profit.size();i++){
 			if (i < buildings_edit_list.size())
 				buildings_edit_list.get(i).setValue(profit.get(i));
+				buildings_edit_list.get(i).addChangeListener(this);
 		}
-		
-		optionsTable = (Hashtable<String, List<Float>>) menager.getOptTable().clone();
-		
 	}
 	
-	public void fillPanel2(){
+	private void fillPanel2(){
 		//GridBagConstraints c = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridwidth = 1;
@@ -152,7 +173,7 @@ public class ConfigurationWindow extends JFrame
 		panel2.setLayout( new GridBagLayout() );
 	}
 	
-	public void fillPanel3(){
+	private void fillPanel3(){
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 1;
@@ -182,7 +203,7 @@ public class ConfigurationWindow extends JFrame
 		panel3.add(closeBtn,c);
 	}
 	
-	public File ShowOpenFilePopup(String title){
+	private File ShowOpenFilePopup(String title){
 		File file= null;
 		fc_OpenSaveFile.setDialogTitle(title);
 		fc_OpenSaveFile.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -192,9 +213,17 @@ public class ConfigurationWindow extends JFrame
 		} else {
 			
 		}
+		val_changed=false;
 		return file;
 	}
 
+	public void stateChanged(ChangeEvent event) {
+		JSpinner source = (JSpinner)event.getSource();
+		float u = Float.parseFloat(buildings_edit_list.get(Integer.parseInt(source.getName())).getValue().toString());
+		optionsTable.get("profit").set(Integer.parseInt(source.getName()), u);
+		val_changed = true;
+	}
+	
 	public void actionPerformed(ActionEvent event) {
 		if ( event.getSource() == addBtn ){
 			JLabel lab = new JLabel(""+count);
@@ -217,20 +246,53 @@ public class ConfigurationWindow extends JFrame
 			File file = ShowOpenFilePopup("Open Config File");
 			if (file != null ) parseConfigFile(file);
 		} else if( event.getSource() == okBtn ) {
-			Hashtable<String, List<Float>> clone = (Hashtable<String, List<Float>>) optionsTable.clone();
+			Hashtable<String, List<Float>> clone = copyHashTable ( optionsTable );
 			/*
 			 * przekazanie informacji o opcjach do menagera
 			 */
-			if ( clone != null ) menager.setOptTable(clone);
+			if ( val_changed ){
+				/*
+				 * to zapisz to pliku config_auto i ten zwroc
+				 */
+			} 
 			if ( filename != null ) 
-				menager.setOptionFileName(filename.getAbsolutePath());
+					menager.setOptionFileName(filename.getAbsolutePath());
+			if ( clone != null ) menager.setOptTable(clone);
 			this.setVisible(false);
+			val_changed = false;
 		} else if ( event.getSource() == closeBtn ){
 			this.setVisible(false);
+			val_changed = false;
+		} else if ( event.getSource() == saveBtn ){
+			File file = ShowOpenFilePopup("Save current config to file...");
+			if (file != null && file.getName() != "" ) saveConfigToFile(file);
 		}
 	}
 	
-	public void parseConfigFile(File filename){
+	private boolean saveConfigToFile(File file){
+		try {
+		       PrintWriter out =
+		         new PrintWriter (new BufferedWriter (new FileWriter (file)));
+		       List<Float> lista;
+		       String[] opcje = {"range","cost","profit"};
+		       for(int u=0;u<3;u++){
+		    	   lista = optionsTable.get(opcje[u]);
+		    	   out.print(opcje[u]+":");
+		    	   for(int i=0;i<lista.size();i++){
+		    		   out.print(lista.get(i)+";");
+		    	   }
+		    	   out.print("\n");
+		       }
+		       out.flush();
+		       out.close();
+		    }
+		    catch (IOException e) {
+		       return false;
+		    }
+		    return true;
+	}
+	
+	private void parseConfigFile(File filename){
 		this.filename = filename;
 		String temp,input,optName="range";
 		BufferedReader in = null;
@@ -287,12 +349,25 @@ public class ConfigurationWindow extends JFrame
 		 */
 		
 		/*
-		 * Ustawianie wartosci na slizgaczach ;)
+		 * Ustawianie wartosci na spinnerach, bezpieczna funkcja
 		 */
-		
-		for (int i=0;i<profit.size();i++){
-			if (i < buildings_edit_list.size())
-				buildings_edit_list.get(i).setValue(profit.get(i));
-		}
+		set_sliders(optionsTable);
 	}
+	/*
+	 * Defensive copying
+	 */
+private Hashtable<String, List<Float>> copyHashTable(Hashtable<String, List<Float>> input ){
+	Hashtable<String, List<Float>> newTable = new Hashtable<String, List<Float>>();
+	for (Iterator iter =input.keySet().iterator(); iter.hasNext();) {
+		String key = (String) iter.next();
+		List<Float> list = input.get(key);
+		List<Float> newList = new ArrayList<Float>();
+		for(int i=0;i<list.size();i++){
+			newList.add(list.get(i));
+		}
+		newTable.put(key, newList);
+	}
+	return newTable;
+	}
+	
 }
