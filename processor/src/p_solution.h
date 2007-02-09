@@ -15,6 +15,8 @@ public:
     pSolution & swap( int i, int j );
     pSolution & dec( int i, int j );
     pSolution & inc( int i, int j );
+    pSolution & decinc( int i, int j );
+    pSolution & incdec( int i, int j );
 
     bool operator==( pSolution & rhs );
     bool operator!=( pSolution & rhs ) { return !operator==(rhs); }

@@ -100,6 +100,7 @@ bool pSolution::equals( pSolution * s )
 
 pSolution & pSolution::swap( int i, int j )
 {
+    P_ASSERT( i >= 0 && j >= 0 && i < size && j < size, "out of range" );
     int swp;
 
     swp = vec[i];
@@ -111,24 +112,31 @@ pSolution & pSolution::swap( int i, int j )
 
 pSolution & pSolution::inc( int i, int j )
 {
-//    if( vec[i] < pc::transmitter_type_count()-1 ) vec[i]++;
+    P_ASSERT( i >= 0 && j >= 0 && i < size && j < size, "out of range" );
     if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
     return *this;
 }
 
 pSolution & pSolution::dec( int i, int j )
 {
-//    if( vec[i] > 0 ) vec[i]--;
+    P_ASSERT( i >= 0 && j >= 0 && i < size && j < size, "out of range" );
     if( vec[j] > 0 ) vec[j]--;
     return *this;
 }
 
-/*
-pSolution * pSolution::copy()
+pSolution & pSolution::incdec( int i, int j )
 {
-    return new pSolution( this );
+    inc( i, j );
+    dec( j, i );
+    return *this;
 }
-*/
+
+pSolution & pSolution::decinc( int i, int j )
+{
+    inc( j, i );
+    dec( i, j );
+    return *this;
+}
 
 pSolution & pSolution::operator=( pSolution & sol )
 {
