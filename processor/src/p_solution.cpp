@@ -116,11 +116,7 @@ pSolution & pSolution::inc( int i, int j )
 {
     P_ASSERT( i >= 0 && j >= 0 && i < size && j < size, "out of range" );
 
-    vec[j] += i;
-    if( vec[j] >= pc::transmitter_type_count() )
-    {
-        vec[j] = vec[j] % pc::transmitter_type_count();
-    }
+    vec[j] += i%(pc::transmitter_type_count()-vec[j]);
 
 //  if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
 
