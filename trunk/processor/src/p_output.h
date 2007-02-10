@@ -3,6 +3,8 @@
 
 #include <string>
 
+#define NO_COLOR
+
 #ifndef WIN32
 #	define COL_RED pOut->color( "\e[38m" )
 #	define COL_BLU pOut->color( "\e[36m" )
