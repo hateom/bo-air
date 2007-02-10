@@ -66,7 +66,7 @@ public class ConfigurationWindow extends JFrame
 	private GridBagConstraints constr;
 	private Hashtable<String, List<Float>> optionsTable = null;
 	
-	private boolean val_changed=false;
+	private boolean val_changed=false, ignore = false;
 	//private List<>
 	private JFileChooser fc_OpenSaveFile;
 	
@@ -151,11 +151,12 @@ public class ConfigurationWindow extends JFrame
 			transmitter_range_list.get(0).setEnabled(false);
 			transmitter_cost_list.get(0).setEnabled(false);
 		} else {
+			ignore = true;
 			for (int i=0; i<size;i++){
 				transmitter_range_list.get(i).setValue( range_list.get(i) );
 				transmitter_cost_list.get(i).setValue( cost_list.get(i) );
-				
 			}
+			ignore = false;
 		}
 	}
 	
@@ -175,7 +176,7 @@ public class ConfigurationWindow extends JFrame
 			c.gridx = w+1;
 			final SpinnerModel p_model = new SpinnerNumberModel(0, //wart pocz
 					0, //min
-					5000, //max
+					50000, //max
 					1);
 			buildings_edit_list.add( new JSpinner() );
 			buildings_edit_list.get(u).setSize(40, 25);
@@ -284,14 +285,14 @@ public class ConfigurationWindow extends JFrame
 			str = source_name.substring(source_name.indexOf(':')+1);
 			float u = Float.parseFloat(buildings_edit_list.get(Integer.parseInt(str)).getValue().toString());
 			optionsTable.get("profit").set(Integer.parseInt(str), u);
-		} else if( source_name.contains("cost") || source_name.contains("range")){
+		} else if( !ignore && (source_name.contains("cost") || source_name.contains("range"))){
 			str = source_name.substring(source_name.indexOf(':')+1);
 			float range = Float.parseFloat(transmitter_range_list.get(Integer.parseInt(str)).getValue().toString());
 			float cost = Float.parseFloat(transmitter_cost_list.get(Integer.parseInt(str)).getValue().toString());
 			optionsTable.get("range").set(Integer.parseInt(str), range);
 			optionsTable.get("cost").set(Integer.parseInt(str), cost);
 		}
-		val_changed = true;
+		if ( !ignore )val_changed = true;
 	}
 	
 	private void addTransmitterSpinner( float rangeVal, float costVal){

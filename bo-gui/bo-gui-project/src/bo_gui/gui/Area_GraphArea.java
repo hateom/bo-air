@@ -82,7 +82,7 @@ public class Area_GraphArea extends JComponent{
 		}
 		yscale = 280.0d/(double)(it*10);
 		xscale = 462.0d/(double)(points.size()-1);
-		//System.out.println("Max:"+maxYval+" - "+(float)(it*10+minYval)+" "+minYval);
+		System.out.println("Max:"+maxYval+" - "+(float)(it*10+minYval)+" "+minYval);
 		Graphics2D g = image.createGraphics();
 		g.setColor( Color.BLACK );
 		//g.setStroke(new BasicStroke(2.0f));
@@ -127,7 +127,7 @@ public class Area_GraphArea extends JComponent{
 		calculateScale( minimum_y,  points.get(okno.menager.getMaxVal()), points.size());
 		
 		for (int i=0;i<list_size-1;i++){
-			g.drawLine(XSTART+(int)(xscale*i),YSTART-(int)(yscale*(points.get(i)-minimum_y)),XSTART+(int)(xscale*(i+1)), YSTART-(int)(yscale*(points.get(i+1)-minimum_y)));
+			g.drawLine(XSTART+(int)(xscale*i),YSTART-(int)(yscale*(points.get(i)-Math.abs(minimum_y))),XSTART+(int)(xscale*(i+1)), YSTART-(int)(yscale*(points.get(i+1)-Math.abs(minimum_y))));
 			//System.out.println((int)xscale*i+" "+(int)(yscale*(points.get(i)-minimum_y)));
 			//g.drawLine((int)(xscale*i),h-(int)(yscale*(points.get(i)-minimum_y)),(int)(xscale*(i+1)), h-(int)(yscale*(points.get(i+1)-minimum_y)));
 			//g.drawLine((int)(xratio*i),h-(int)(yratio2*(points.get(i))),(int)(xratio*(i+1)), h-(int)(yratio2*(points.get(i+1))));
