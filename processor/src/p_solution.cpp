@@ -115,7 +115,15 @@ pSolution & pSolution::swap( int i, int j )
 pSolution & pSolution::inc( int i, int j )
 {
     P_ASSERT( i >= 0 && j >= 0 && i < size && j < size, "out of range" );
-    if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
+
+    vec[j] += i;
+    if( vec[j] >= pc::transmitter_type_count() )
+    {
+        vec[j] = vec[j] % pc::transmitter_type_count();
+    }
+
+//  if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
+
     return *this;
 }
 
