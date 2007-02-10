@@ -7,17 +7,16 @@ Podstawow± ide± przeszukiwania tabu jest eksploracja przestrzeni, stworzonej ze 
 Dla przyk³adu prosta implementacja mo¿e zakwalifikowaæ ruch jako tabu, je¿eli ruch do niego przeciwny wykonany zosta³ ostatnio lub wykonywany by³ czêsto. Czasami, gdy uwa¿ane jest to za korzystne, ruch tabu mo¿e byæ uniewa¿niony. Takie kryterium aspiracyjne obejmuje równie¿ przypadek, kiedy przez zapomnienie, i¿ dany ruch jest tabu, dojdziemy do rozwi±zania najlepszego z uzyskanych dotychczas.
 
 \vspace{1cm}
-\textsc{Kryterium Aspiracji}\\
+\begin{description}
+\item[Kryterium Aspiracji]
 Zapisywanie na li¶cie tabu atrybutów rozwi±zañ, a w³a¶ciwie atrybutów rozwi±zañ i ruchów, i w konsekwencji traktowanie pewnych ruchów jako zabronionych, ma oprócz oczywistych zalet tak¿e powa¿n± wadê. Mo¿e to bowiem powodowaæ zabronienie wykonania ruchu, który  jest jednak interesuj±cy z punktu widzenia dalszego procesu poszukiwania. Przyk³adowo prowadzi bezpo¶rednio lub po¶rednio (po wykonaniu kilku dalszych iteracji) do rozwi±zañ lokalnie optymalnych o warto¶ci funkcji celu mniejszej ni¿ dotychczas znaleziona. W celu unikniêcia tej wady wprowadza siê funkcjê aspiracji ruchu oraz poziom aspiracji do zabronienia. Je¿eli dany ruch (wymiana) jest zabroniony, ale jego warto¶æ funkcji aspiracji jest mniejsza ni¿ poziom aspiracji do zabronienia , to ruch ten traktuje siê jako ruch niezabroniony.
 
-\vspace{1cm}
-\textsc{Pamiêæ krótkoterminowa}\\
+\item[Pamiêæ krótkoterminowa]
 TODO
 
-\vspace{1cm}
-\textsc{Pamiêæ d³ugoterminowa}\\
+\item[Pamiêæ d³ugoterminowa]
 TODO
-
+\end{description}
 \subsection{Algorytm}
 \begin{itemize}
  \item Pocz±tek. Wybierz: $\pi_{st}, \pi_{min}:=\pi_{st}, \pi:=\pi_{st},$
