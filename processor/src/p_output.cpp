@@ -1,6 +1,7 @@
 #include <cstdarg>
 #include <iostream>
 #include "p_output.h"
+#include "p_cfg_mgr.h"
 
 pOutput::pOutput() : silent(false)
 {
@@ -59,6 +60,11 @@ pOutput * pOutput::singleton()
 
 const char * pOutput::color( const char * col )
 {
-    return( silent ? "" : col );
+#ifdef NO_COLOR
+    return "";
+#else
+    if( silent ) return "";
+    return col;
+#endif
 }
 

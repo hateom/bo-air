@@ -46,43 +46,49 @@ int pTabuSearch::init()
     return 0;
 }
 
+#define PERM 3
+
 float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, bool f )
 {
     float q_temp;
     
-    if( ink % 7 == 0 )
+    if( ink % PERM == 0 )
     {
         pOut->print( "imp: swap & inc %d, %d: ", i, j );
         in->swap( i, j );
         in->inc( i, j );
     }
-    else if( ink % 7 == 1 )
+/*
+    else if( ink % PERM == 1 )
     {
         pOut->print( "imp: swap & dec %d, %d: ", i, j );
         in->swap( i, j );
         in->dec( i, j );
     }
-    else if ( ink % 7 == 2 )
+    else if ( ink % PERM == 2 )
     {
         pOut->print( "imp: dec %d, %d: ", i, j );
         in->dec( i, j );
     }
-    else if ( ink % 7 == 3 )
+*/
+    else if ( ink % PERM == 1 )
     {
         pOut->print( "imp: inc %d, %d: ", i, j );
         in->inc( i, j );
     }
-    else if( ink % 7 == 4 )
+/*
+    else if( ink % PERM == 4 )
     {
         pOut->print( "imp: decinc %d, %d: ", i, j );
         in->decinc( i, j );
     }
-    else if( ink % 7 == 5 )
+    else if( ink % PERM == 5 )
     {
         pOut->print( "imp: incdec %d, %d: ", i, j );
         in->incdec( i, j );
     }
-    else // if( ink % 4 == 3 )
+*/
+    else
     {
         pOut->print( "imp: swap %d, %d: ", i, j );
         in->swap( i, j );
@@ -126,19 +132,19 @@ int pTabuSearch::exec()
         while( true )
         {
             ++z;
-            s_temp = s_a;
+//            s_temp = s_a;
             for( size_t j=0; j<ssize; ++j )
             {
                 for( size_t i=j; i<ssize; ++i )
                 {
                     if( i == j ) continue;
-
+                    s_temp = s_a;
                     if( short_list( i, j ) == 0 )
                     {
                         // PI( i*, j* )
                         if( (qt = improve_sol( &s_temp, i, j, z )) < q_min )
                         {
-                            pOut->print( "improve i*, j* [k:%d=%2.2f]\n", k, qt );
+                            pOut->print( "improve i*, j* [k:%d=%2.2f]\n", k, qt==0.0f?0.0f:-qt );
                             q_min = qt;
                             ip = i;
                             jp = j;
@@ -150,7 +156,7 @@ int pTabuSearch::exec()
                         // PI( i', j' )
                         if( (qt = improve_sol( &s_temp, i, j, z, false )) < q_min2 )
                         {
-                            pOut->print( "improve i', j' [k:%d=%2.2f]\n", k, qt );
+                            pOut->print( "improve i', j' [k:%d=%2.2f]\n", k, qt==0.0f?0.0f:-qt );
                             q_min2 = qt;
                             ipp = i;
                             jpp = j;
