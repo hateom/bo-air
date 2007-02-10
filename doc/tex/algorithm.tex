@@ -11,10 +11,10 @@ Dla przyk³adu prosta implementacja mo¿e zakwalifikowaæ ruch jako tabu, je¿eli ru
 \item[Kryterium Aspiracji]
 Zapisywanie na li¶cie tabu atrybutów rozwi±zañ, a w³a¶ciwie atrybutów rozwi±zañ i ruchów, i w konsekwencji traktowanie pewnych ruchów jako zabronionych, ma oprócz oczywistych zalet tak¿e powa¿n± wadê. Mo¿e to bowiem powodowaæ zabronienie wykonania ruchu, który  jest jednak interesuj±cy z punktu widzenia dalszego procesu poszukiwania. Przyk³adowo prowadzi bezpo¶rednio lub po¶rednio (po wykonaniu kilku dalszych iteracji) do rozwi±zañ lokalnie optymalnych o warto¶ci funkcji celu mniejszej ni¿ dotychczas znaleziona. W celu unikniêcia tej wady wprowadza siê funkcjê aspiracji ruchu oraz poziom aspiracji do zabronienia. Je¿eli dany ruch (wymiana) jest zabroniony, ale jego warto¶æ funkcji aspiracji jest mniejsza ni¿ poziom aspiracji do zabronienia , to ruch ten traktuje siê jako ruch niezabroniony.
 
-\item[Pamiêæ krótkoterminowa]
+\item[Pamiêæ krótkoterminowa] (oznaczana dalej jako KLT)
 TODO
 
-\item[Pamiêæ d³ugoterminowa]
+\item[Pamiêæ d³ugoterminowa] (oznaczana dalej jako DLT)
 TODO
 \end{description}
 \subsection{Algorytm}
@@ -26,7 +26,7 @@ TODO
   \pi(i^*, j^*) = arg min\left\{ Q\left(\pi\left(i,j\right)\right) + \frac{\alpha}{k}DLT\left(i,j\right):KLT\left(i,j\right)=0 \right\}
  \end{math}\footnote{\ensuremath{\frac{\alpha}{k}DLT\left(i,j\right)} - rola kary, \ensuremath{\alpha} - parametr; zapobiega tak¿e cyklowi d³ugoterminowemu}\\
  \begin{math}
-  \pi\left(i',j'\right)=arg min\left\{ Q\left(\pi\left(i,j\right)\right):KLT\left(i,j\right)>0 \right\}
+  \pi\left(i',j'\right)=arg min\left\{ Q\left(\pi\left(i,j\right)\right):KLT\left(i,j\right)>0 \right\}\\
   \pi:=\pi\left(i^*,j^*\right), Q\left(k\right):=Q\left(\pi\right)
  \end{math}\\
   Je¿eli $Q(\pi) < Q_{min}$ to $\pi_{min}:=\pi, Q_{min}:=Q(\pi)$
@@ -40,4 +40,25 @@ TODO
    je¿eli ch=false to $KLT(i^*,j^*):=T$ inaczej $KLT(i',j'):=T$\\
    je¿eli ch=false to $DLT(i^*,j^*):=DLT(i^*,j^*)+1$ inaczej $DLT(i',j'):=DLT(i',j')+1$
   \end{itemize}
+\end{itemize}
+
+\subsection{Implementacja algorytmu}
+Implementacja algorytmu w naszym programie jest oparta w du¿ej mierze na schemacie przedstawionym w poprzednim rozdziale. Wa¿niejszymi etapami algorytmu, które wymagaj± g³êbszego komentarza, postaram siê przedstawiæ w kolejnych punktach. Istot± poprawnego dzia³ania algorytmu w oparciu o nasz problem, by³o stworzenie odpowiednich funkcji s³u¿acych do generowania rozwi±zania pocz±tkowego ooraz do generowania otoczeñ.
+
+\subsubsection{Generowanie rozwi±zania pocz±tkowego}
+
+Rozwi±zanie pocz±tkowe generowane jest w dwojaki sposób. 
+\begin{itemize}
+ \item Je¿eli ilo¶æ budynków przekracza ilo¶æ miejsc dopuszczalnych na postawienie nadajników, rozwi±zaniem startowym jest rozwi±zanie puste. 
+ \item Je¿eli natomiast ilo¶æ miejsc dopuszczalnych na postawienie nadajników jest wiêksza ni¿ ilo¶æ budynków, generujemy rozwi±zanie pocz±tkowe zawieraj±ce ilo¶æ nadajników równ± ilo¶ci budynków. Ich typy\footnote{typy nadajników, czyli parametry opisuj±ce zasiêg oraz cenê nadajnika} oraz po³o¿enie dobierane s± w sposób losowy.
+\end{itemize}
+
+\subsubsection{Generowanie otoczenia}
+
+Jednym z najistotniejszych etapów algorytmu jest generowanie otoczenia.
+Generowanie otoczenia w naszym programie jest dokonywane w dwojaki sposób.
+\begin{itemize}
+ \item Pierwszym sposobem generowania otoczenia jest zamiana dwóch elementów ze sob±, czyli funkcja postaci $\pi(i, j )$ gdzie i oraz j s± indeksami elementów
+ które zostaj± zamienione miejscami. Poniewa¿ nasz algorytm mo¿e rozpoczynaæ obliczenia od rozwi±zania pustego, tego typu procedura nie mia³a by sensu. Dlatego te¿ wprowadzili¶my równie¿ drugi sposób generowania otoczenia.
+ \item Sposób drugi polega na zmianie typu nadajnika. Io¶æ typów nadajników jest skoñczona, i jest to warto¶æ któr± mo¿na ustaliæ w programie. Generacja polega zatem na zmianie typu nadajnika na bie¿±cej pozycji. Je¿eli na danej pozycji nie by³o nadajnika, dzia³anie procedury rozumiemy poprzez zmianê typu nadajnika z \textit{zero}\footnote{nadajnik typu zero odpowiada pustemu polu - brak nadajnika} na warto¶æ wiêksz± od zera.
 \end{itemize}
