@@ -202,7 +202,7 @@ public class MainWindow
 		right_panel.lf();
 		right_panel.doloz(scroll_pane, true);
 		
-		JLabel lab = new JLabel( "Best founded solution: " );
+		JLabel lab = new JLabel( "Best solution: " );
 		right_panel.doloz(lab);
 		best_sol =  new JLabel("");
 		right_panel.doloz(best_sol);

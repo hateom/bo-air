@@ -81,10 +81,10 @@ T - żywotność elementu na liście TABU
 			}
 		if( filename != "" && filename != null && !error){
 			if (exec!=null && exec.isAlive()){
-				terminate_thread();
-				proces.destroy();
-				halted = true;
 				okno.StartButton.setEnabled(false);
+				terminate_thread();
+				if ( proces != null )proces.destroy();
+				halted = true;
 			}
 			else{
 				halted = false;
@@ -111,8 +111,8 @@ T - żywotność elementu na liście TABU
 		this.file = file;
 	}
 	public synchronized void signalizeFinish(){
-		okno.StartButton.setEnabled(true);
 		okno.StartButton.setText("Start");
+		okno.StartButton.setEnabled(true);
 	}
 	
 	public synchronized void setProcess( Process proc){
@@ -128,7 +128,7 @@ T - żywotność elementu na liście TABU
 	public synchronized void setProcessResult( List<SolutionStruct> solution ){
 		if (halted){
 			results_list.clear();
-		}else{
+		}else if ( solution.size()!=0 ) {
 			results_list.clear();
 //			/float max_val = 0.0f;
 			
@@ -143,9 +143,10 @@ T - żywotność elementu na liście TABU
 			best_solution = solution.size()-1;
 			okno.graph.setPoints(results_list);
 			if ( results_list.size() != 0 ) okno.map.DrawSolution(solution.get(best_solution));
+			okno.setBestSolLabel( Float.toString(solution.get(solution.size()-1).profit) );
 		}
-		okno.StartButton.setEnabled(true);
-		okno.setBestSolLabel( Float.toString(solution.get(solution.size()-1).profit) );
+		
+		//okno.StartButton.setEnabled(true)
 	}
 	
 	public int getMaxVal(){
