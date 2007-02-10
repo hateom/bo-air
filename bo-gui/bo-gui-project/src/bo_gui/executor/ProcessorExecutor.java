@@ -81,8 +81,8 @@ public class ProcessorExecutor implements Runnable{
 				menager.print_debug_info("[E]" + e.getMessage());
 			}
 			menager.setProcessResult(result);
-			menager.signalizeFinish();
 			menager.print_debug_info("[E]Process finished");
+			menager.signalizeFinish();
 	}
 		
 }
