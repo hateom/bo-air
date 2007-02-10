@@ -1,3 +1,15 @@
 \section{Opis problemu}
 
 Zagadnienie, które porusza nasz projekt dotyczy problemu rozmieszczenia nadajników na danym obszarze w taki sposób, by jak najwiêksza ilo¶æ budynków znalaz³a siê w zasiêgu nadajnika, jednocze¶nie minimalizuj±c koszty zwi±zane z postawieniem nadajnika, oraz maksymalizuj±c zyski zwi±zane z op³at± za zapewnienie zasiêgu w danym budynku.
+
+\begin{figure}
+  \centering
+  \subfigure[Mapka wej¶ciowa]{\label{fig:map_in}\includegraphics[width=0.45\textwidth]{./img/example_map_01.eps}}
+  \subfigure[Mapka wyj¶ciowa]{\label{fig:map_out}\includegraphics[width=0.45\textwidth]{./img/example_map_02.eps}}
+  \caption{Przyk³adowe mapki: wej¶ciowa oraz wyj¶ciowa (rozwi±zanie)}
+  \label{fig:maps}
+\end{figure}
+
+Rysunek \ref{fig:map_in} przestawia przyk³adow± mapê wej¶ciow±, która prezentuje obszar z miejscami dopuszczalnymi dla nadajników oraz lokalizacja i zamieszkanie budynków. Mapka ma postaæ siatki, gdzie ka¿dy prostok±t siatki reprezentuje pole w którym mo¿e znale¼æ siê nadajnik b±d¼ budynek. Miejsca dopuszczalne dla nadajników symbolizuj± czarne obramowania pól, natomiast pola wype³nione kolorem\footnote{kolorem w skali szaro¶ci} prezentuj± budynki. Nasycenie koloru\footnote{w skali szaro¶ci - poziom szaro¶ci} prezentuje ilo¶æ osób zameiszkuj±cych budynek. Im kolor ciemniejszy, tym wiêcej osób zamieszkuje dany budynek.
+
+Na rysunku \ref{fig:map_out} mo¿emy zobaczyæ wynik dzia³ania projektu. Jest to mapka wej¶ciowa wzbogacona o informacje dotycz±ce nadajników. Nadajniki s± optymalnie usytuowane na mapie, zaznaczone kolorem zielonym w polu w którym siê znajduj±. Dodatkowo na mapce wyj¶ciowej zaznaczony jest zasiêg danego nadajnika w postaci ko³a\footnote{Promien ko³a jest zasiêgiem danego nadajnika} o ¶rodku w miejscu po³o¿enia nadajnika.
