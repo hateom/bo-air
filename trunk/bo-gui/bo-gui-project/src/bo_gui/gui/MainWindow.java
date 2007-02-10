@@ -48,9 +48,13 @@ public class MainWindow
 	protected JButton configurationButton, aboutBtn;
 	protected ConfigurationWindow confWnd;
 	protected AboutWindow aboutWnd;
+	protected Area_LegendArea legend;
+	protected JLabel best_sol;
 	
 	public static final int Graphs_WIDTH = 500;
 	public static final int Graphs_HEIGHT = 300;
+	public static final int LEGEND_WIDTH  = 200;
+	public static final int LEGEND_HEIGHT = 100;
 	public MainWindow(){
 		
 		menager = new Executor_Thread_Menager(this);
@@ -102,6 +106,19 @@ public class MainWindow
 		JPanel bottom_panel = new JPanel();
 		main_panel.add(bottom_panel);
 		JButtonListener ActionListener = new JButtonListener();
+		
+		
+		JLabel legend_label =  new JLabel ("Legend");
+		right_panel.doloz(legend_label);
+		right_panel.lf();
+		
+		legend = new Area_LegendArea(this);
+		
+		legend.setPreferredSize( new Dimension(200,100) );
+		legend.setMinimumSize( new Dimension(200,100) );
+		legend.setSize( new Dimension(200,100) );
+		
+		right_panel.doloz( legend, true );
 		
 		OpenFileButton = new JButton("Open Map...");
 		right_panel.doloz(OpenFileButton);
@@ -185,6 +202,11 @@ public class MainWindow
 		right_panel.lf();
 		right_panel.doloz(scroll_pane, true);
 		
+		JLabel lab = new JLabel( "Best founded solution: " );
+		right_panel.doloz(lab);
+		best_sol =  new JLabel("");
+		right_panel.doloz(best_sol);
+		
 		
 		map = new Area_MapArea(this);
 		map.setPreferredSize(new Dimension(Graphs_WIDTH, Graphs_HEIGHT));
@@ -240,6 +262,10 @@ public class MainWindow
 		
     }
 	
+	public void setBestSolLabel( String label ){
+		best_sol.setText(label);
+	}
+	
 	public class JButtonListener implements ActionListener{
 		
 		public void actionPerformed(ActionEvent event) {
@@ -252,6 +278,7 @@ public class MainWindow
 					menager.print_debug_info("[G]Opening file.."+file.getName());
 					menager.setFileName(file.getAbsolutePath(), file);
 					map.DrawMap(file);
+					legend.DrawLegend();
 				 }
 			}
 			

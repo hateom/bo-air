@@ -145,6 +145,7 @@ T - żywotność elementu na liście TABU
 			if ( results_list.size() != 0 ) okno.map.DrawSolution(solution.get(best_solution));
 		}
 		okno.StartButton.setEnabled(true);
+		okno.setBestSolLabel( Float.toString(solution.get(solution.size()-1).profit) );
 	}
 	
 	public int getMaxVal(){
@@ -184,6 +185,7 @@ T - żywotność elementu na liście TABU
 		this.optTable = optTable;
 		if (filename != null && !filename.equals("")) {
 			okno.map.DrawMap(file);
+			okno.legend.DrawLegend();
 		}
 	}
 	
