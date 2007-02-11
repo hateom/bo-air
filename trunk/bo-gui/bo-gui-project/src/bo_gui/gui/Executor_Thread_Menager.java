@@ -25,6 +25,7 @@ public class Executor_Thread_Menager {
 	private String OptionFileName = "";
 	private File file = null;
 	private List<String> params = null;
+	private boolean batchMode = false;
 	
 	public String getOptionFileName() {
 		return OptionFileName.toString();
@@ -52,6 +53,10 @@ public class Executor_Thread_Menager {
 		fillTable();
 	}
 	
+	public void reportBadMap(){
+		filename = "";
+		file = null;
+	}
 	
 	public synchronized void start_thread(){
 		/*params = "--K="+k_val+" ";
@@ -110,22 +115,28 @@ T - żywotność elementu na liście TABU
 		this.filename = filename;
 		this.file = file;
 	}
-	public synchronized void signalizeFinish(){
-		okno.StartButton.setText("Start");
-		okno.StartButton.setEnabled(true);
+	
+	public void setBatchMode ( boolean val ){
+		batchMode = val;
 	}
 	
-	public synchronized void setProcess( Process proc){
+	public synchronized void signalizeFinish( ){
+		okno.StartButton.setText("Start");
+		okno.StartButton.setEnabled(true);
+		//if (batchMode && okno.batchWnd!=null) { okno.batchWnd.processNext(); }
+	}
+	
+	public synchronized void setProcess( Process proc ){
 		proces = proc;
 	}
 	
-	public synchronized void terminate_thread(){
+	public synchronized void terminate_thread( ){
 		print_debug_info("[M]Requesting process termination...");
 		
 		exec.interrupt();
 	}
 	
-	public synchronized void setProcessResult( List<SolutionStruct> solution ){
+	public synchronized void setProcessResult( List<SolutionStruct> solution  ){
 		if (halted){
 			results_list.clear();
 		}else if ( solution.size()!=0 ) {
@@ -143,10 +154,15 @@ T - żywotność elementu na liście TABU
 			best_solution = solution.size()-1;
 			okno.graph.setPoints(results_list);
 			if ( results_list.size() != 0 ) okno.map.DrawSolution(solution.get(best_solution));
+			okno.saveToImage( file.getName() );
 			okno.setBestSolLabel( Float.toString(solution.get(solution.size()-1).profit) );
 		}
 		
 		//okno.StartButton.setEnabled(true)
+	}
+	
+	public boolean isHalted(){
+		return halted;
 	}
 	
 	public int getMaxVal(){
@@ -217,5 +233,20 @@ T - żywotność elementu na liście TABU
 			profit.add( (i-'a'+1)*300.0f );
 		}
 		
+	}
+
+
+	public int getAlphaVal() {
+		return alphaVal;
+	}
+
+
+	public int getK_val() {
+		return k_val;
+	}
+
+
+	public int getT_val() {
+		return t_val;
 	}
 }

@@ -17,6 +17,8 @@ public class JPanelExtended extends JPanel{
 	 */
 	private static final long serialVersionUID = 4898229359770081928L;
 	private GridBagConstraints constr;
+	private int width;
+	
 	public JPanelExtended(){
 		super();
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -26,17 +28,23 @@ public class JPanelExtended extends JPanel{
 		constr.gridx = 0;
 		constr.gridy = 0;
 		constr.insets = new Insets(3,3,2,2);
+		width = 2;
+	}
+	
+	JPanelExtended( int w ){
+		this();
+		width = w;
 	}
 	
 	public void doloz(Component wkladnik){
 		super.add(wkladnik,constr);
-		constr.gridy+=1*constr.gridx;
-		constr.gridx=(constr.gridx+1)%2;
+		if ( constr.gridx == width ) constr.gridy++;
+		constr.gridx=(constr.gridx+1)%width;
 	}
 	
 	public void doloz(Component wkladnik,boolean szeroko){
 		lf();
-		constr.gridwidth = 2;
+		constr.gridwidth = width;
 		super.add(wkladnik,constr);
 		lf();
 		constr.gridwidth=1;
@@ -45,5 +53,9 @@ public class JPanelExtended extends JPanel{
 	public void lf(){
 		constr.gridy+=1;
 		constr.gridx=0;
+	}
+	
+	public void setFillType( int fill ){
+		constr.fill = fill;
 	}
 }

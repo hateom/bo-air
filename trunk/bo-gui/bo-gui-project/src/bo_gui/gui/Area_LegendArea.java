@@ -65,4 +65,8 @@ public class Area_LegendArea extends JComponent{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
 	}
+	
+	public BufferedImage getImage(){
+		return image;
+	}
 }

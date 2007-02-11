@@ -15,6 +15,7 @@ public class ProcessorExecutor implements Runnable{
 	private Executor_Thread_Menager menager;
 	private String inFile, program_name;
 	private List<String> params;
+	private int count;
 	//
 	
 	public ProcessorExecutor(Executor_Thread_Menager menager , String pExecutor, List<String> params, String inFile){
