@@ -21,7 +21,7 @@ public class Area_MapArea extends JComponent{
 	private MainWindow okno;
 	private MapImageBuilder Map_creator;
 	
-	protected BufferedImage image, solution_image;
+	protected BufferedImage image;
 
 	public Area_MapArea(MainWindow okno){ 
 		this.okno = okno;
@@ -62,5 +62,9 @@ public class Area_MapArea extends JComponent{
 			g.drawImage(image,null,null);
 		}
 		super.paintComponent(g);
+	}
+	
+	public BufferedImage getImage(){
+		return image;
 	}
 }

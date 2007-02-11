@@ -6,9 +6,19 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,10 +30,18 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import com.sun.image.codec.jpeg.*;
 
 public class MainWindow
-			implements ChangeListener
+			extends JFrame 
+			implements ChangeListener,
+						ActionListener,
+						ItemListener 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7573712310630205875L;
 	static final int K_MIN = 1;
 	static final int K_MAX = 51;
 	static final int K_INIT = 20; 
@@ -43,20 +61,25 @@ public class MainWindow
 	protected Executor_Thread_Menager menager;
 	protected Area_MapArea map;
 	protected Area_GraphArea graph;
-	protected JButton StartButton,OpenFileButton;
+	protected JButton StartButton,OpenFileButton, batchBtn;
 	protected JFileChooser fc;
 	protected JButton configurationButton, aboutBtn;
 	protected ConfigurationWindow confWnd;
 	protected AboutWindow aboutWnd;
 	protected Area_LegendArea legend;
 	protected JLabel best_sol;
+	protected JCheckBox saveOutputToggle;
+	private String path = System.getProperty("user.dir");
+	private boolean saveBool = false;
+	//protected BatchWindow batchWnd;
+	
 	
 	public static final int Graphs_WIDTH = 500;
 	public static final int Graphs_HEIGHT = 300;
 	public static final int LEGEND_WIDTH  = 200;
 	public static final int LEGEND_HEIGHT = 100;
 	public MainWindow(){
-		
+		super("BO : Tabu Search Project");
 		menager = new Executor_Thread_Menager(this);
 		confWnd = null;
 		aboutWnd = null;
@@ -76,8 +99,8 @@ public class MainWindow
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		JFrame frame = new JFrame("BO : Tabu Search Project");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//JFrame frame = new JFrame("BO : Tabu Search Project");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		fc = new JFileChooser();
 		
@@ -139,6 +162,16 @@ public class MainWindow
 		aboutBtn = new JButton("About...");
 		aboutBtn.addActionListener(ActionListener);
 		right_panel.doloz(aboutBtn);
+		/*
+		batchBtn = new JButton("Batch Mode");
+		batchBtn.addActionListener(this);
+		right_panel.doloz(batchBtn);
+		*/
+		
+		saveOutputToggle = new JCheckBox("Save Output to files");
+		saveOutputToggle.addItemListener(this);
+		saveOutputToggle.setSelected(false);
+		right_panel.doloz( saveOutputToggle );
 		
 		right_panel.lf();
 		
@@ -225,11 +258,11 @@ public class MainWindow
 		left_panel.doloz(graph);
 		graph.clear();
 		
-		frame.getContentPane().add(main_panel,BorderLayout.WEST);
-		frame.pack();
+		this.getContentPane().add(main_panel,BorderLayout.WEST);
+		this.pack();
 		//frame.setSize(900,600);
-		frame.setResizable(false);
-		frame.setVisible(true);
+		this.setResizable(false);
+		this.setVisible(true);
 		menager.print_debug_info("Current OS is : "+System.getProperty("os.name"));
 	}
 	
@@ -272,7 +305,8 @@ public class MainWindow
 			if (event.getSource() == StartButton){
 				menager.start_thread();
 			}
-			if (event.getSource() == OpenFileButton){
+			
+			else if (event.getSource() == OpenFileButton){
 				File file = ShowOpenFilePopup("Open Map File");
 				if (file!= null){
 					menager.print_debug_info("[G]Opening file.."+file.getName());
@@ -299,5 +333,107 @@ public class MainWindow
 			}
 		}
 		
+	}
+
+	public void saveToImage( String inputName ){
+		BufferedImage mapImage = map.getImage();
+		BufferedImage graphImage = graph.getImage();
+		BufferedImage legendImage = legend.getImage();
+		if ( saveBool ){
+			try{
+				String Filename = path+"/"+inputName+"_config"+".txt";
+				if(Filename != null){
+					FileWriter writer = new FileWriter( Filename );
+					writer.write("K = "+ menager.getK_val() +"\n");
+					writer.write("T = "+ menager.getT_val() +"\n");
+					writer.write("Alpha = " + menager.getAlphaVal() +"\n");
+					Hashtable <String, List<Float>> table = menager.getOptTable(); 
+					for (Iterator iter = table.keySet().iterator(); iter.hasNext();) {
+						String key = (String) iter.next();
+						List<Float> list = table.get(key);
+						writer.write(key+"\n");
+						for(int i=0;i<list.size();i++){
+							writer.write(list.get(i)+" ");
+						}
+						writer.write(";\n");
+					}
+					writer.flush();
+					writer.close();
+
+
+				}
+
+				Filename = path+"/"+inputName+"_map"+".jpg";
+				if(Filename != null){
+					FileOutputStream fo = new FileOutputStream(Filename);
+					JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
+					encoder.encode(mapImage);
+					//encoder.
+					fo.close();
+				}
+				Filename = path+"/"+inputName+"_graph"+".jpg";
+				if(Filename != null){
+					FileOutputStream fo = new FileOutputStream(Filename);
+					JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
+					encoder.encode(graphImage);
+					fo.close();
+				}
+				Filename = path+"/"+inputName+"_legend"+".jpg";
+				if(Filename != null){
+					FileOutputStream fo = new FileOutputStream(Filename);
+					JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
+					encoder.encode(legendImage);
+					fo.close();
+				}
+			}
+			catch(Exception ex){
+				ex.printStackTrace();
+				menager.print_debug_info("[!!] Writing image failure!");
+			}
+		}
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == batchBtn){
+			//batchWnd = new BatchWindow( this );
+		}
+	}
+
+	public void itemStateChanged(ItemEvent event) {
+		if ( event.getSource()== saveOutputToggle ){
+			if ( event.getStateChange() == ItemEvent.SELECTED ){
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				fc.setCurrentDirectory( new File ( path ) );
+				File file = ShowOpenFilePopup("Choose Output Directory");
+				if (file != null && file.getAbsolutePath() != "") {
+					path = file.getAbsolutePath();
+					saveBool = true;
+				} else {
+					saveOutputToggle.setSelected( false );
+					saveBool = false;
+				}
+				
+			} else 
+			{ 
+				saveBool = false;
+			}
+		}
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	}
+	public Area_GraphArea getGraph() {
+		return graph;
+	}
+
+	public void setGraph(Area_GraphArea graph) {
+		this.graph = graph;
+	}
+
+	public Area_MapArea getMap() {
+		return map;
+	}
+
+	public void setMap(Area_MapArea map) {
+		this.map = map;
 	}
 }

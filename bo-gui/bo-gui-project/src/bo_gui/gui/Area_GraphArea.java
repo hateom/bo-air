@@ -145,5 +145,9 @@ public class Area_GraphArea extends JComponent{
 		}
 		super.paintComponent(g);
 	}
-
+	
+	public BufferedImage getImage(){
+		return image;
+	}
+	
 }

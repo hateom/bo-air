@@ -36,6 +36,7 @@ public class MapImageBuilder {
 			max_size = 0;
 			linie_list.clear();
 			lista_pol.clear();
+			
 			BufferedReader in
 			   = new BufferedReader(new FileReader(InputFile.getAbsolutePath()));
 			while( (temp = in.readLine()) != null){
@@ -104,34 +105,41 @@ public class MapImageBuilder {
 			 */
 			
 			g.setColor(Color.BLACK);
-			char znaczek;
-			int numerek=0;
-			for(int u=0;u<map_height;u++){
-				for(int i=0;i<map_width;i++){
-					//System.out.println(i+" "+u);
-					znaczek = linie_list.get(u).charAt(i);
-					if(znaczek == ' ') {
-						g.setColor(Color.BLACK);
-						g.drawRect(i*box_w, u*box_h, box_w, box_h);
-						//g.fillRect(i*box_w, u*box_h, box_w, box_h);
-						lista_pol.add(u*map_width+i);
-					}
-					else if((znaczek >= 'a') && ( znaczek <= 'z') ){
-						
-						/*
+			try{
+				char znaczek;
+				int numerek=0;
+				for(int u=0;u<map_height;u++){
+					for(int i=0;i<map_width;i++){
+						//System.out.println(i+" "+u);
+						znaczek = linie_list.get(u).charAt(i);
+						if(znaczek == ' ') {
+							g.setColor(Color.BLACK);
+							g.drawRect(i*box_w, u*box_h, box_w, box_h);
+							//g.fillRect(i*box_w, u*box_h, box_w, box_h);
+							lista_pol.add(u*map_width+i);
+						}
+						else if((znaczek >= 'a') && ( znaczek <= 'z') ){
+
+							/*
 						numerek='z' + 1-(int)znaczek;
 						g.setColor( new Color( 100+5*numerek, 100+5*numerek, 100+5*numerek ) );
 						}
-						*/
-						numerek = Math.abs(('a' - (int)znaczek));
-						if (numerek < 0 || numerek > menager.getOptTable().get("profit").size() ) numerek=0;
-						//System.out.println( numerek+" "+znaczek );
-						Float val = (float)255.0 - (ratio*menager.getOptTable().get("profit").get(numerek));
-						//System.out.println( numerek+" "+znaczek+ " "+val );
-						g.setColor( new Color (val.intValue(), val.intValue(), val.intValue()) );
-						g.fillRect(i*box_w, u*box_h, box_w, box_h);
+							 */
+							numerek = Math.abs(('a' - (int)znaczek));
+							if (numerek < 0 || numerek > menager.getOptTable().get("profit").size() ) numerek=0;
+							//System.out.println( numerek+" "+znaczek );
+							Float val = (float)255.0 - (ratio*menager.getOptTable().get("profit").get(numerek));
+							//System.out.println( numerek+" "+znaczek+ " "+val );
+							g.setColor( new Color (val.intValue(), val.intValue(), val.intValue()) );
+							g.fillRect(i*box_w, u*box_h, box_w, box_h);
+						}
 					}
 				}
+			}
+			catch (Exception e){
+				menager.print_debug_info("[IB] Error!! Wrong file type?");
+				clear();
+				menager.reportBadMap();
 			}
 		}
 	}
