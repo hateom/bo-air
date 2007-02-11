@@ -82,7 +82,7 @@ public class Area_GraphArea extends JComponent{
 		}
 		yscale = 280.0d/(double)(it*10);
 		xscale = 462.0d/(double)(points.size()-1);
-		System.out.println("Max:"+maxYval+" - "+(float)(it*10+minYval)+" "+minYval);
+		//System.out.println("Max:"+maxYval+" - "+(float)(it*10+minYval)+" "+minYval);
 		Graphics2D g = image.createGraphics();
 		g.setColor( Color.BLACK );
 		//g.setStroke(new BasicStroke(2.0f));

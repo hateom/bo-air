@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -338,11 +339,14 @@ public class MainWindow
 	
 	public void jpgWriter( String Filename, BufferedImage image) throws Exception{
 		if(Filename != null){
-			FileOutputStream fo = new FileOutputStream(Filename);
+			/*FileOutputStream fo = new FileOutputStream(Filename);
 			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
 			encoder.encode(image);
-			//encoder.
-			fo.close();
+			JPEGEncodeParam param = encoder.getJPEGEncodeParam();
+			param.setQuality(1.0f, true);
+			encoder.setJPEGEncodeParam( param );
+			fo.close();*/
+			ImageIO.write(image,"png", new File(Filename));
 		}
 	}
 
@@ -375,11 +379,11 @@ public class MainWindow
 
 				}
 
-				Filename = path+"/"+inputName+"_map"+".jpg";
+				Filename = path+"/"+inputName+"_map"+".png";
 				jpgWriter(Filename, mapImage);
-				Filename = path+"/"+inputName+"_graph"+".jpg";
+				Filename = path+"/"+inputName+"_graph"+".png";
 				jpgWriter(Filename, graphImage);
-				Filename = path+"/"+inputName+"_legend"+".jpg";
+				Filename = path+"/"+inputName+"_legend"+".png";
 				jpgWriter(Filename, legendImage);
 				
 			}
