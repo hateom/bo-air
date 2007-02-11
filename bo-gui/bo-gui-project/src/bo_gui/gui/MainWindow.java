@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -334,6 +335,16 @@ public class MainWindow
 		}
 		
 	}
+	
+	public void jpgWriter( String Filename, BufferedImage image) throws Exception{
+		if(Filename != null){
+			FileOutputStream fo = new FileOutputStream(Filename);
+			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
+			encoder.encode(image);
+			//encoder.
+			fo.close();
+		}
+	}
 
 	public void saveToImage( String inputName ){
 		BufferedImage mapImage = map.getImage();
@@ -357,34 +368,20 @@ public class MainWindow
 						}
 						writer.write(";\n");
 					}
-					writer.flush();
-					writer.close();
+					writer.write( "Best Solution (Profit): "+menager.getMaxVal());
+					writer.flush( );
+					writer.close( );
 
 
 				}
 
 				Filename = path+"/"+inputName+"_map"+".jpg";
-				if(Filename != null){
-					FileOutputStream fo = new FileOutputStream(Filename);
-					JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
-					encoder.encode(mapImage);
-					//encoder.
-					fo.close();
-				}
+				jpgWriter(Filename, mapImage);
 				Filename = path+"/"+inputName+"_graph"+".jpg";
-				if(Filename != null){
-					FileOutputStream fo = new FileOutputStream(Filename);
-					JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
-					encoder.encode(graphImage);
-					fo.close();
-				}
+				jpgWriter(Filename, graphImage);
 				Filename = path+"/"+inputName+"_legend"+".jpg";
-				if(Filename != null){
-					FileOutputStream fo = new FileOutputStream(Filename);
-					JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fo);
-					encoder.encode(legendImage);
-					fo.close();
-				}
+				jpgWriter(Filename, legendImage);
+				
 			}
 			catch(Exception ex){
 				ex.printStackTrace();

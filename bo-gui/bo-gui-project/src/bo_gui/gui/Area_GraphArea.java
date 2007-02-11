@@ -124,7 +124,7 @@ public class Area_GraphArea extends JComponent{
 		//float xratio = getWidth()/points.size();
 		//float yratio2 = getHeight()/( points.get(okno.menager.getMaxVal()));
 		
-		calculateScale( minimum_y,  points.get(okno.menager.getMaxVal()), points.size());
+		calculateScale( minimum_y,  points.get(okno.menager.getMaxValIndex()), points.size());
 		
 		for (int i=0;i<list_size-1;i++){
 			g.drawLine(XSTART+(int)(xscale*i),YSTART-(int)(yscale*(points.get(i)-Math.abs(minimum_y))),XSTART+(int)(xscale*(i+1)), YSTART-(int)(yscale*(points.get(i+1)-Math.abs(minimum_y))));

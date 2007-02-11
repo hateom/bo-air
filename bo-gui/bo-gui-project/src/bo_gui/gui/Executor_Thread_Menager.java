@@ -17,6 +17,7 @@ public class Executor_Thread_Menager {
 	private MainWindow okno;
 	private List<Float> results_list;
 	private int best_solution;
+	private float best_solution_value = 0.0f;
 	private boolean halted = false;
 	private Process proces;
 	private String filename, prog_name;
@@ -152,6 +153,7 @@ T - żywotność elementu na liście TABU
 				}*/
 			}
 			best_solution = solution.size()-1;
+			best_solution_value = solution.get(best_solution).profit;
 			okno.graph.setPoints(results_list);
 			if ( results_list.size() != 0 ) okno.map.DrawSolution(solution.get(best_solution));
 			okno.saveToImage( file.getName() );
@@ -165,8 +167,12 @@ T - żywotność elementu na liście TABU
 		return halted;
 	}
 	
-	public int getMaxVal(){
+	public int getMaxValIndex(){
 		return best_solution;
+	}
+	
+	public float getMaxVal(){
+		return best_solution_value;
 	}
 	
 	public void setKval( int value ){
