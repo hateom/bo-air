@@ -1,3 +1,41 @@
 \subsection{GUI}
-Program ten jest napisany w jêzyku \textsc{Java}, i jego zadaniem jest w sposób intuicyjny zarz±dzanie programem \textbf{processor}, oraz wizualnie zaprezentowaæ rezultat jego dzia³ania.\\
-Reszte zostawiam panu \textbf{Ja¶kowi}.
+\paragraph{Informacje ogólne}
+Graficzny Interfejs U¿ytkownika (GUI) zosta³ napisany w jêzyku Java przy u¿yciu komponentów Swing i AWT. Zadaniem Interfejsu jest przyjazna dla u¿ytkownika obs³uga programu "processor". Naszym celem by³o umo¿liwienie bezproblemowej pracy programu w systemie Linux oraz Windows. Poniewa¿ interfejs jest napisany w Javie mo¿na go uruchamiaæ w dowolnym systemie zawieraj±cym JRE 1.5.x. Nale¿y oczywi¶cie dysponowaæ odpowiednim plikiem wykonywalnym procesora  (jako, ¿e jest pisany w C++).
+\paragraph{Okno g³ówne}
+Zrzut okna g³ównego znajduje siê poni¿ej:\\
+\includegraphics[width=1.0\textwidth]{./img/mainWnd.eps}\\[1cm]
+Interfejs sk³ada sie z kilku podstawowych czê¶ci: po lewej znajduj± siê obszary na których jest rysowane mapa i wykres funkcji celu. Po prawej znajduje siê legenda opisuj±ca mapê ( przypisuje kolory do oznaczeñ budynków ) oraz przyciski steruj±ce dzia³aniem programu: \\
+\begin{itemize}
+  \item "Open Map..." - klikniêcie tego przycisku powoduje otwarcie okienka wyboru pliku zawieraj±cego mapê. Za³adowanie pliku mapy jest niezbêdne do rozpoczêcia obliczeñ. 
+
+  \item "Configuration"- otwiera okno konfiguracji parametrów (zyski z poszczególnych typów budynków oraz opis anten: koszt i zasiêg). Program posiada pewne domy¶ne parametry, wiêc konfiguracja nie jest obligatoryjna. Dok³adniejszy opis znajduje siê w dalszej czê¶ci tej sekcji.
+
+  \item "About" - otwiera okno opisuj±ce autorów tego projektu
+
+  \item "Save Output to files" - zaznaczenie tego pola pozwala na wybranie katalogu do zapisywania danych wyj¶ciowych. Program zapisuje wyj¶cie jako cztery pliki: 3 pliki PNG , zawieraj±ce mapê wykres funkcji celu oraz legednê, oraz jeden plik tekstowy w którym znajduj± siê parametry z jakimi zosta³y wykonane obliczenia.
+
+  \item "Start" przycisk który uruchamia obliczenia, lub je zatrzymuje je¿eli zosta³y ju¿ rozpoczête.
+\end{itemize}
+
+Ponadto na oknie g³ównym znajduj± siê równie¿ suwaki do zmiany parametrów: K, T, Aplha które to napewno opisa³ \textbf{DILZ}
+\\
+Na dole okna znajduje siê konsola na któr± s± wypisywane najwa¿niejsze informacje o stanie dzia³ania programu. W niej pojawiaj± siê równie¿ ostrze¿enia o b³êdach. Poni¿ej konsoli znajduje siê etykieta na której wy¶wietla siê informacja o najlepszym znalezionym rozwi±zaniu. \\
+\paragraph{Konfiguracja}
+Okno konfiguracji znajduje siê na obrazie poni¿ej:\\
+\includegraphics[width=1.0\textwidth]{./img/confWndProfit.eps}\\[1cm]
+Tutaj pokazana jest konfiguracja zysków z objêcia danego budynku zasiêgiem. W naszym projekcie rozró¿niamy budynki oznaczaj±c je literami alfabetu 'a' - 'z' (bez polskich liter). Ka¿demu rodzajowi budynku mo¿na przyporz±dkowaæ dowolny nieujemny zysk. Przek³ada siê to na wygl±d mapy i oczywi¶cie rezultat obliczeñ.\\
+Kolejn± zak³adk± jest konfiguracja anten:\\
+\includegraphics[width=1.0\textwidth]{./img/confWndTransEdit.eps}\\[1cm]
+Klikniêcie na przycisk "Add transmitter" powoduje dodanie nowej anteny do listy. Ka¿d± antenê, oprócz zerowej, mo¿na edytowaæ tzn. ustalaæ jej zasiêg oraz koszt postawienia. Pierwsze pole odpowiada za zasiêg, a drugie za koszt.\\
+Ostatnia zak³adka s³u¿y do zatwierdzenia konfiguracji, anulowania zmian, zapisania jej do pliku lub otwarcia istniej±cej zapisanej konfiguracji:\\
+\includegraphics[width=1.0\textwidth]{./img/confWndFiles.eps}\\[1cm]
+\paragraph{Dzia³anie}
+Pierwszym krokiem jest wczytanie mapy. Jest ona nastêpnie parsowana i na tej podstawie jest rysowana graficzna jej reprezentacja. Uruchomienie procesu obliczeniowego odbywa siê przez wci¶niêcie przycisku "Start". Powoduje to utworzenie nowego w±tku, w którym jest wywo³ywany program "processor". Po jego zakoñczeniu GUI analizuje jego wyj¶cie i przetwarza je na obraz rozwi±zania (tzn zaznaczenie wybranych nadajników oraz obrysowanie ich zasiegu) oraz rysuje wykres funkcji celu dla kolejnych iteracji. \\ Je¿eli nie zosta³a zmieniona domy¶nla konfiguracja to program korzysta z niej i nie przekazuje ¿adnej informacji jej dotycz±cej do "processora". W przeciwnym przypadku u¿ytkownik musi najpierw zapisaæ konfiguracjê do pliku, aby mog³a zostaæ przekazana do procesu obliczeniowego.\\
+Je¿eli u¿ytkownik zaznaczy³ opcjê zapisu wyj¶cia do pliku to zostan± wygenerowane pliki we wskazanym folderze. Generowane s± nastêpuj±ce pliki o sk³adni:
+\begin{itemize}
+  \item \textit{<input\_file>\_graph.png} - obraz funkcji celu;
+  \item \textit{<input\_file>\_map.png} - wizualizacja mapy;
+  \item \textit{<input\_file>\_legend.png} - plik z obrazem legendy;
+  \item \textit{<input\_file>\_config.txt} - plik tekstowy z informacj± o konfiguracji z jak± dane wej¶ciowe by³y przetwarzane;
+\end{itemize}
+<input\_file> to nazwa pliku wej¶ciowego (mapy).\\
