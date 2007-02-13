@@ -1,3 +1,10 @@
 \section{Model}
-
-Opis Modelu. Jasiek - do dzie³a :-) Opisz tutaj wzorkami mniej wiêcej to co robi³ plastu¶ t³umacz±c nam jak mamy zrobiæ ten projekt. Mia³e¶ to kiedy¶ na kartce napisane.
+Nasz model sk³ada siê z kilku podstawowych elementów. S± nimi: anteny, mapa oraz budynki. Anteny s± opisane jako struktura sk³adaj±ca wygl±daj±ca nastepuj±co 
+$$
+\{typ, zasiêg, koszt\}
+$$ Budynki s± opisane poprzez typ (od a - z) oraz zysk p³yn±cy z objêcia budynku zasiêgiem. Antena jest tablic± w której znak '0' oznacza miejsce w którym anteny postawiæ nie mo¿na, znak ' ' (spacja) oznacza miejsce w którym mo¿na postawiæ antenê, natomiast znaki 'a'-'z' oznaczaj± budynek danego typu.\\
+Celem programu jest takie u³o¿enie anten, aby uzyskaæ jak najwiêkszy zyst z inwestycji. Rozwi±zaniem jest ci±g w postaci: 
+\[
+\{\{pole_1, typ_1\},\{pole_2,typ_2\},...,\{pole_n, typ_n\}\}
+\]
+Gdzie \textit{pole} oznacza numer pola na mapie na którym zosta³a wybrana antena, a \textit{typ} oznacza typ anteny (pozwalaj±cy na odczytanie jej zasiêgu i kosztu).
