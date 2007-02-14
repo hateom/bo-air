@@ -1,10 +1,26 @@
 \section{Model}
+Jak ju¿ zosta³o powiedziane celem tego programu jest takie u³o¿enie anten, aby wygenerowaæ jak najwiêkszy zysk i przykryæ jak najwiêksz± ilo¶æ bundynków przy jednoczensje minimalizacji kosztów.\\
+Pierwszym krokiem pracy nad wykonaniem postawionego zadania by³o wyznaczenie modelu opisuj±cego zagadnienie. Oczywi¶cie jest to model w pewien sposób uproszczony gdy¿ nie rozpatrujemy niektórych sytuacji i zjawisk maj±cych miejsce w rzeczywisto¶ci jak np. zak³ócenia sygna³u wynikaj±ce z istnienia budynków na jego drodze. Pomijamy równie¿ koszt zakupu dzia³ki, niejako wliczaj±c go do kosztów nadajnika.\\
 Nasz model sk³ada siê z kilku podstawowych elementów. S± nimi: anteny, mapa oraz budynki. Anteny s± opisane jako struktura sk³adaj±ca wygl±daj±ca nastepuj±co 
 $$
 \{typ, zasiêg, koszt\}
-$$ Budynki s± opisane poprzez typ (od a - z) oraz zysk p³yn±cy z objêcia budynku zasiêgiem. Antena jest tablic± w której znak '0' oznacza miejsce w którym anteny postawiæ nie mo¿na, znak ' ' (spacja) oznacza miejsce w którym mo¿na postawiæ antenê, natomiast znaki 'a'-'z' oznaczaj± budynek danego typu.\\
-Celem programu jest takie u³o¿enie anten, aby uzyskaæ jak najwiêkszy zyst z inwestycji. Rozwi±zaniem jest ci±g w postaci: 
+$$ 
+Dziêki takiemu opisowi mo¿emy mieæ dowoln± (rozs±dn±) ilo¶æ anten. Zasiêg oznacza promieñ w którym znajduj±ce siê budynki bêd± objête zasiêgiem. \\
+Kolejnym elementen modelu s± budynki. Opisane s± poprzez typ (od 'a' - 'z') oraz zysk p³yn±cy z objêcia budynku zasiêgiem, czyli s± struktur± wygl±daj±c± nastêpuj±co: 
+$$
+\{typ, zysk\}
+$$ 
+W programie nie uwzglêdniamy kary wynikaj±cej z nieobjêcia budynku zasiêgiem.\\
+Mapa jest tablic± w której znak '0' oznacza miejsce w którym anteny postawiæ nie mo¿na, znak ' ' (spacja) oznacza miejsce w którym mo¿na postawiæ antenê, natomiast znaki 'a'-'z' oznaczaj± budynek danego typu. W ten sposób mo¿na tworzyæ w edytorze dowoln± mapê w do¶æ prosty sposób.\\
+Celem programu jest takie u³o¿enie anten, aby uzyskaæ jak najwiêkszy zyst z inwestycji. Zysk rozumiemy jako ró¿nicê pomiêdzy sumarycznym zyskiem p³yn±cym z objêtych zasiêgiem budnyków a sum± kosztów postawienia anten.\\
+Rozwi±zaniem jest ci±g w postaci: 
 \[
 \{\{pole_1, typ_1\},\{pole_2,typ_2\},...,\{pole_n, typ_n\}\}
 \]
 Gdzie \textit{pole} oznacza numer pola na mapie na którym zosta³a wybrana antena, a \textit{typ} oznacza typ anteny (pozwalaj±cy na odczytanie jej zasiêgu i kosztu).
+\\¦cis³y wzór na funkcjê celu:
+\[
+\sum_{i \in B}{z_i \cdot x_i} - \sum_{j \in S}{c_j} \longrightarrow max
+\]
+Przez zbiór $B$ oznaczamy zbiór wszystkich budynków na mapie, $z_i$ oznacza zysk z i-tego budynku, natomiast $x_i$ jest zmienn± o warto¶ciach \{0, 1\} zale¿n± od tego czy i-ty budynek jest w zasiêgu której¶ anteny. \\
+Jako zbiór $S$ rozumiemy zbiór wszystkich postawionych anten, gdzie $c_j$ wyra¿a koszt postawienia j-tej antenty, zale¿ny od jej typu.
