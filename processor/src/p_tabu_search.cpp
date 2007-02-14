@@ -6,6 +6,8 @@
 #include "p_cost_mgr.h"
 #include "p_cfg_mgr.h"
 
+#define PERM 6
+
 #define CFG_GET( PARAM, VAR, DEF ) if( !pCfgMgr::get_int( PARAM, &VAR )) { VAR = DEF; }
 
 #define def_K       35
@@ -46,7 +48,6 @@ int pTabuSearch::init()
     return 0;
 }
 
-#define PERM 3
 
 float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, bool f )
 {
@@ -58,8 +59,7 @@ float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, 
         in->swap( i, j );
         in->inc( i, j );
     }
-/*
-    else if( ink % PERM == 1 )
+    else if( ink % PERM == 1 ) //~~~
     {
         pOut->print( "imp: swap & dec %d, %d: ", i, j );
         in->swap( i, j );
@@ -70,13 +70,13 @@ float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, 
         pOut->print( "imp: dec %d, %d: ", i, j );
         in->dec( i, j );
     }
-*/
-    else if ( ink % PERM == 1 )
+    // /~~~
+    else if ( ink % PERM == 3 )
     {
         pOut->print( "imp: inc %d, %d: ", i, j );
         in->inc( i, j );
     }
-/*
+    //~~~
     else if( ink % PERM == 4 )
     {
         pOut->print( "imp: decinc %d, %d: ", i, j );
@@ -87,7 +87,7 @@ float pTabuSearch::improve_sol( pSolution * in, size_t i, size_t j, size_t ink, 
         pOut->print( "imp: incdec %d, %d: ", i, j );
         in->incdec( i, j );
     }
-*/
+    // /~~~
     else
     {
         pOut->print( "imp: swap %d, %d: ", i, j );

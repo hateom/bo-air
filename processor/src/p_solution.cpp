@@ -57,15 +57,8 @@ void pSolution::init( int max_value, int bc )
 {
     if( !size ) return;
     memset( vec, 0, size*sizeof(int) );
-/*
-    if( bc == 0 )
-    {
-        for( size_t i=0; i<size; ++i )
-        {
-            vec[i] = rand()%(max_value+1);
-        }
-    }
-    else
+    
+    if( bc != 0 ) // ~~~
     {
         int rnd;
         memset( vec, 0, size*sizeof(int) );
@@ -117,8 +110,6 @@ pSolution & pSolution::inc( int i, int j )
     P_ASSERT( i >= 0 && j >= 0 && i < size && j < size, "out of range" );
 
     vec[j] += i%(pc::transmitter_type_count()-vec[j]);
-
-//  if( vec[j] < pc::transmitter_type_count()-1 ) vec[j]++;
 
     return *this;
 }
