@@ -12,10 +12,10 @@ Dla przyk³adu prosta implementacja mo¿e zakwalifikowaæ ruch jako tabu, je¿eli ru
 Zapisywanie na li¶cie tabu atrybutów rozwi±zañ, a w³a¶ciwie atrybutów rozwi±zañ i ruchów, i w konsekwencji traktowanie pewnych ruchów jako zabronionych, ma oprócz oczywistych zalet tak¿e powa¿n± wadê. Mo¿e to bowiem powodowaæ zabronienie wykonania ruchu, który  jest jednak interesuj±cy z punktu widzenia dalszego procesu poszukiwania. Przyk³adowo prowadzi bezpo¶rednio lub po¶rednio (po wykonaniu kilku dalszych iteracji) do rozwi±zañ lokalnie optymalnych o warto¶ci funkcji celu mniejszej ni¿ dotychczas znaleziona. W celu unikniêcia tej wady wprowadza siê funkcjê aspiracji ruchu oraz poziom aspiracji do zabronienia. Je¿eli dany ruch (wymiana) jest zabroniony, ale jego warto¶æ funkcji aspiracji jest mniejsza ni¿ poziom aspiracji do zabronienia , to ruch ten traktuje siê jako ruch niezabroniony.
 
 \item[Pamiêæ krótkoterminowa] (oznaczana dalej jako KLT)
-TODO
+Jest to pamiêæ w postaci tablicy w której zapisujemy przestawienia w danym otoczeniu. (lista tabu) Warto¶ci na li¶cie maj± okre¶lony czas wa¿no¶ci\footnote{wyra¿ony w liczbie iteracji}.
 
 \item[Pamiêæ d³ugoterminowa] (oznaczana dalej jako DLT)
-TODO
+Podobnie jak pamiêæ krótkoterminowa s³u¿y do zliczania przestawieñ elementów, z t± ró¿nic±, ¿e zapamiêtuje wszystkie przestawienia - lista nie jest wymazywana.
 \end{description}
 \subsection{Algorytm}
 \begin{itemize}

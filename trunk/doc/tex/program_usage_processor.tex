@@ -1,2 +1,15 @@
 \subsection{Processor}
-Program \textsc{processor} jest rdzeniem naszego projektu, który w zamierzeniu mia³ w jak naprostszy, oraz jak najszybszy sposób wygenerowaæ rozwi±zanie optymalne problemu.
+Program \textsc{processor} jest rdzeniem naszego projektu, który w zamierzeniu mia³ w jak naprostszy, oraz jak najszybszy sposób wygenerowaæ 
+rozwi±zanie optymalne problemu. Program jest aplikacj± konsolow±, tak wiêc aby skorzystaæ z niego samego (bez wykorzystania nak³adki GUI) nale¿y
+uruchomiæ program w konsoli (cmd.exe w windows, b±d¼ w terminalu pow³oki linuks/unix). Program wywo³ujemy w sposób nastêpuj±cy:
+\begin{verbatim}
+processor --input=INPUT --silent --K=x --T=y --ALPHA=z
+\end{verbatim}
+Wszystkie parametry oprócz pierwszego (input) s± opcjonalne. Poni¿ej opis parametrów programu:
+\begin{itemize}
+    \item input nazwa pliku wej¶ciowego (mapy)
+    \item silent - tryb bez dodatkowych komunikatów oraz informacji - wykorzystywany przez nak³adkê GUI
+    \item{K, T, ALPHA} parametry odpowiednio K - ilo¶æ iteracji, ALPHA - parametr algorytmu, T - ilo¶æ iteracji przez jak± dany element jest na 
+          li¶cie tabu
+\end{itemize}
+

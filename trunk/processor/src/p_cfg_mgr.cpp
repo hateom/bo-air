@@ -35,9 +35,10 @@ int pCfgMgr::add_cfg( const char * cfg )
 
 const char * pCfgMgr::get( const char * str )
 {
+    static char buffer[1024] = "";
     std::string out = list[std::string(str)];
-
-    return out.c_str();
+    strcpy( buffer, out.c_str() );
+    return buffer;
 }
 
 void pCfgMgr::free()
