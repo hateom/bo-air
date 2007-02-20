@@ -3,7 +3,7 @@
 Graficzny Interfejs U¿ytkownika (GUI) zosta³ napisany w jêzyku Java przy u¿yciu komponentów Swing i AWT. Zadaniem Interfejsu jest przyjazna dla u¿ytkownika obs³uga programu "processor". Naszym celem by³o umo¿liwienie bezproblemowej pracy programu w systemie Linux oraz Windows. Poniewa¿ interfejs jest napisany w Javie mo¿na go uruchamiaæ w dowolnym systemie zawieraj±cym JRE 1.5.x. Nale¿y oczywi¶cie dysponowaæ odpowiednim plikiem wykonywalnym procesora  (jako, ¿e jest pisany w C++).
 \subsubsection{Okno g³ówne}
 Zrzut okna g³ównego znajduje siê na rysunku \ref{fig:mainWnd}:\\
-\begin{figure}[!h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.75\textwidth]{./img/mainWnd.eps}
   \caption{G³ówne okno programu}
@@ -28,7 +28,7 @@ Ponadto na oknie g³ównym znajduj± siê równie¿ suwaki do zmiany parametrów: K, T,
 Na dole okna znajduje siê konsola na któr± s± wypisywane najwa¿niejsze informacje o stanie dzia³ania programu. W niej pojawiaj± siê równie¿ ostrze¿enia o b³êdach. Poni¿ej konsoli znajduje siê etykieta na której wy¶wietla siê informacja o najlepszym znalezionym rozwi±zaniu. \\
 \subsubsection{Konfiguracja}
 Okno konfiguracji znajduje siê na obrazie \ref{fig:confProfit}.
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.75\textwidth]{./img/confWndProfit.eps}
   \caption{Okno konfiguracji: Edycja budynków}
@@ -37,7 +37,7 @@ Okno konfiguracji znajduje siê na obrazie \ref{fig:confProfit}.
 % \includegraphics[width=1.0\textwidth]{./img/confWndProfit.eps}\\[1cm]
 Tutaj pokazana jest konfiguracja zysków z objêcia danego budynku zasiêgiem. W naszym projekcie rozró¿niamy budynki oznaczaj±c je literami alfabetu 'a' - 'z' (bez polskich liter). Ka¿demu rodzajowi budynku mo¿na przyporz±dkowaæ dowolny nieujemny zysk. Przek³ada siê to na wygl±d mapy i oczywi¶cie rezultat obliczeñ.\\
 Kolejn± zak³adk± jest konfiguracja anten pokazana na obrazie \ref{fig:confTrans}
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.75\textwidth]{./img/confWndTransEdit.eps}
   \caption{Okno konfiguracji: Anteny}
@@ -46,7 +46,7 @@ Kolejn± zak³adk± jest konfiguracja anten pokazana na obrazie \ref{fig:confTrans}
 % \includegraphics[width=1.0\textwidth]{./img/confWndTransEdit.eps}\\[1cm]
 Klikniêcie na przycisk "Add transmitter" powoduje dodanie nowej anteny do listy. Ka¿d± antenê, oprócz zerowej, mo¿na edytowaæ tzn. ustalaæ jej zasiêg oraz koszt postawienia. Pierwsze pole odpowiada za zasiêg, a drugie za koszt.\\ Klikaj±c na przycisk "Remove transmitter" usuwamy antenê z listy. Nie mo¿na usun±æ tylko anteny "zerowej".
 Ostatnia zak³adka s³u¿y do zatwierdzenia konfiguracji, anulowania zmian, zapisania jej do pliku lub otwarcia istniej±cej zapisanej konfiguracji, zrzut ekranu z t± zak³adk± znajduje siê na obrazie \ref{fig:confFiles}\\
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.75\textwidth]{./img/confWndFiles.eps}
   \caption{Okno konfiguracji: Otwieranie i zapisywanie konfiguracji}
@@ -54,6 +54,14 @@ Ostatnia zak³adka s³u¿y do zatwierdzenia konfiguracji, anulowania zmian, zapisan
 \end{figure}
 % \includegraphics[width=1.0\textwidth]{./img/confWndFiles.eps}\\[1cm]
 \subsubsection{Dzia³anie}
+Program uruchamia siê albo poprzez do³±czony plik ``bogui.exe'' albo wprost u¿ywaj±c programu java. Pomimo, ¿e program mo¿na uruchamiaæ poprzez plik wykonywalny, nadal niezbêdne jest posiadanie ¶rodowiska JRE w wersji 5 wzwy¿. Równie¿ musz± znajdowaæ siê w odpowiednich katalogach wzglêdem programu pliki .class (tak jak zosta³y przez nas do³±czone). Wszystkie pliki wykonywalne s± w katalogu bin/. \\
+Aby uruchamiaæ program przy u¿yciu programu java, nale¿y przej¶æ do katalogu w którym znajduj± siê pliki .class projektu (np bo-gui/bo-gui-project/bin) i wydaæ komendê:\\
+\begin{verbatim}
+ java bo-gui.Runner
+\end{verbatim}
+
+Spowoduje to uruchomienie GUI. Wa¿ne jest, aby w katalogu z którego wywo³ujemy GUI znajdowa³ siê plik procesora (processor lub processor.exe, zale¿nie od aktualnego systemu). W przypadku jego braku przy próbie uruchomienia obliczeñ pojawi siê okienko w którym nale¿y wybraæ program procesora.
+
 Pierwszym krokiem jest wczytanie mapy. Jest ona nastêpnie parsowana i na tej podstawie jest rysowana graficzna jej reprezentacja. Uruchomienie procesu obliczeniowego odbywa siê przez wci¶niêcie przycisku "Start". Powoduje to utworzenie nowego w±tku, w którym jest wywo³ywany program "processor". Po jego zakoñczeniu GUI analizuje jego wyj¶cie i przetwarza je na obraz rozwi±zania (tzn zaznaczenie wybranych nadajników oraz obrysowanie ich zasiegu) oraz rysuje wykres funkcji celu dla kolejnych iteracji. \\ Je¿eli nie zosta³a zmieniona domy¶nla konfiguracja to program korzysta z niej i nie przekazuje ¿adnej informacji jej dotycz±cej do "processora". W przeciwnym przypadku u¿ytkownik musi najpierw zapisaæ konfiguracjê do pliku, aby mog³a zostaæ przekazana do procesu obliczeniowego.\\
 Je¿eli u¿ytkownik zaznaczy³ opcjê zapisu wyj¶cia do pliku to zostan± wygenerowane pliki we wskazanym folderze. Generowane s± nastêpuj±ce pliki o sk³adni:
 \begin{itemize}
